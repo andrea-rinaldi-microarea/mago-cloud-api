@@ -28,6 +28,8 @@ namespace MagicLinkWinForm
             tbxAccountName.Text = Properties.Settings.Default.AccountName;
             tbxPassword.Text = Properties.Settings.Default.Password;
             tbxSubscription.Text = Properties.Settings.Default.subscriptionkey;
+            tbxProfileName.Text = Properties.Settings.Default.ProfileName;
+            cbxProfileType.Text = Properties.Settings.Default.ProfileType;
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -99,6 +101,8 @@ namespace MagicLinkWinForm
             Properties.Settings.Default.AccountName = tbxAccountName.Text;
             Properties.Settings.Default.Password = tbxPassword.Text;
             Properties.Settings.Default.subscriptionkey = tbxSubscription.Text;
+            Properties.Settings.Default.ProfileName = tbxProfileName.Text;
+            Properties.Settings.Default.ProfileType = cbxProfileType.Text;
 
             Properties.Settings.Default.Save();
         }
@@ -110,7 +114,7 @@ namespace MagicLinkWinForm
 
             XDocument xmlMessages = XDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(result.ToArray()[0].ToString())));
             XmlNamespaceManager mgr = new XmlNamespaceManager(new NameTable());
-            mgr.AddNamespace("maxs", "http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/Standard/DefaultLight.xsd");
+            mgr.AddNamespace("maxs", $"http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/{cbxProfileType.Text}/{tbxProfileName.Text}.xsd");
 
             string resultText = string.Empty;
 
@@ -205,8 +209,8 @@ namespace MagicLinkWinForm
             using (var msg = new HttpRequestMessage())
             {
                 var xmlParam =
-                    @"<?xml version='1.0' encoding='utf-8'?>
-                    <maxs:Contacts tbNamespace='Document.ERP.Contacts.Documents.Contacts' xTechProfile='DefaultLight' xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/Standard/DefaultLight.xsd'>
+                    $@"<?xml version='1.0' encoding='utf-8'?>
+                    <maxs:Contacts tbNamespace='Document.ERP.Contacts.Documents.Contacts' xTechProfile='{tbxProfileName.Text}' xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/{cbxProfileType.Text}/{tbxProfileName.Text}.xsd'>
                         <maxs:Parameters>
                         </maxs:Parameters>
                     </maxs:Contacts>";
@@ -412,7 +416,7 @@ namespace MagicLinkWinForm
             using (var msg = new HttpRequestMessage())
             {
                 string xmlData = $@"<?xml version='1.0'?>
-                <maxs:Contacts xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/Standard/DefaultLight.xsd' tbNamespace = 'Document.ERP.Contacts.Documents.Contacts' xTechProfile = 'DefaultLight' >
+                <maxs:Contacts xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/{cbxProfileType.Text}/{tbxProfileName.Text}.xsd' tbNamespace = 'Document.ERP.Contacts.Documents.Contacts' xTechProfile = '{tbxProfileName.Text}' >
                     <maxs:Data>
                         <maxs:Contacts master='true'>
                             <maxs:CompanyName>{txtCompanyName.Text}</maxs:CompanyName>

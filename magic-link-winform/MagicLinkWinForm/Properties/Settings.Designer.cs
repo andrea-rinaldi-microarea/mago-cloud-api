@@ -70,5 +70,29 @@ namespace MagicLinkWinForm.Properties {
                 this["subscriptionkey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DefaultLight")]
+        public string ProfileName {
+            get {
+                return ((string)(this["ProfileName"]));
+            }
+            set {
+                this["ProfileName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Standard")]
+        public string ProfileType {
+            get {
+                return ((string)(this["ProfileType"]));
+            }
+            set {
+                this["ProfileType"] = value;
+            }
+        }
     }
 }

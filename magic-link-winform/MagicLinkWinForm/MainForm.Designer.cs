@@ -54,6 +54,10 @@
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.txtCompanyName = new System.Windows.Forms.TextBox();
             this.txtContactName = new System.Windows.Forms.TextBox();
+            this.tbxProfileName = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cbxProfileType = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -162,10 +166,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(329, 12);
+            this.tabControl1.Location = new System.Drawing.Point(329, 50);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(470, 599);
+            this.tabControl1.Size = new System.Drawing.Size(470, 561);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -175,7 +179,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(462, 573);
+            this.tabPage1.Size = new System.Drawing.Size(462, 535);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Get Data ";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -190,7 +194,7 @@
             this.tbxData.Multiline = true;
             this.tbxData.Name = "tbxData";
             this.tbxData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbxData.Size = new System.Drawing.Size(450, 532);
+            this.tbxData.Size = new System.Drawing.Size(450, 494);
             this.tbxData.TabIndex = 12;
             // 
             // btnGetContacts
@@ -310,12 +314,52 @@
             this.txtContactName.Size = new System.Drawing.Size(240, 20);
             this.txtContactName.TabIndex = 10;
             // 
+            // tbxProfileName
+            // 
+            this.tbxProfileName.Location = new System.Drawing.Point(407, 23);
+            this.tbxProfileName.Name = "tbxProfileName";
+            this.tbxProfileName.Size = new System.Drawing.Size(141, 20);
+            this.tbxProfileName.TabIndex = 15;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(330, 26);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 13);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "profile name";
+            // 
+            // cbxProfileType
+            // 
+            this.cbxProfileType.FormattingEnabled = true;
+            this.cbxProfileType.Items.AddRange(new object[] {
+            "Standard",
+            "AllUsers"});
+            this.cbxProfileType.Location = new System.Drawing.Point(667, 22);
+            this.cbxProfileType.Name = "cbxProfileType";
+            this.cbxProfileType.Size = new System.Drawing.Size(121, 21);
+            this.cbxProfileType.TabIndex = 16;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(571, 25);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(58, 13);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "profile type";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(800, 623);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.cbxProfileType);
+            this.Controls.Add(this.tbxProfileName);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tbxMessages);
@@ -369,6 +413,10 @@
         private System.Windows.Forms.TextBox txtCompanyName;
         private System.Windows.Forms.TextBox txtContactName;
         private System.Windows.Forms.TextBox tbxResponse;
+        private System.Windows.Forms.TextBox tbxProfileName;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox cbxProfileType;
+        private System.Windows.Forms.Label label10;
     }
 }
 

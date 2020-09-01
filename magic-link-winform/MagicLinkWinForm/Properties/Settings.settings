@@ -14,5 +14,11 @@
     <Setting Name="subscriptionkey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ProfileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DefaultLight</Value>
+    </Setting>
+    <Setting Name="ProfileType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Standard</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
