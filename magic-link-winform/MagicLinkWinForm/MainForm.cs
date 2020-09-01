@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Xml.Linq;
+using System.Xml.XPath;
+using System.Xml;
 
 namespace MagicLinkWinForm
 {
@@ -99,6 +101,38 @@ namespace MagicLinkWinForm
             Properties.Settings.Default.subscriptionkey = tbxSubscription.Text;
 
             Properties.Settings.Default.Save();
+        }
+
+        private string extractXMLMessages(JToken result)
+        {
+            if (result == null)
+                return string.Empty;
+
+            XDocument xmlMessages = XDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(result.ToArray()[0].ToString())));
+            XmlNamespaceManager mgr = new XmlNamespaceManager(new NameTable());
+            mgr.AddNamespace("maxs", "http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/Standard/DefaultLight.xsd");
+
+            string resultText = string.Empty;
+
+            IEnumerable<XElement> elems = xmlMessages.XPathSelectElements("//maxs:Warning", mgr);
+            if (elems.Count() > 0)
+            {
+                resultText += "\r\nWarnings:\r\n";
+                foreach (XElement elem in elems)
+                {
+                    resultText += elem.XPathSelectElement("maxs:Message", mgr).Value;
+                }
+            }
+            elems = xmlMessages.XPathSelectElements("//maxs:Error", mgr);
+            if (elems.Count() > 0)
+            {
+                resultText += "\r\nErrors:\r\n";
+                foreach (XElement elem in elems)
+                {
+                    resultText += elem.XPathSelectElement("maxs:Message", mgr).Value;
+                }
+            }
+            return resultText;
         }
 
         private void btnGetContacts_Click(object sender, EventArgs e)
@@ -230,6 +264,11 @@ namespace MagicLinkWinForm
                     else
                     {
                         tbxMessages.Text = "Request failed";
+                        if (jResult["result"] != null)
+                            tbxMessages.Text += ":\r\n" + extractXMLMessages(jResult["result"]);
+                        if (jResult["message"] != null)
+                            tbxMessages.Text += ":\r\n" + jResult["message"];
+
                         Cursor.Current = Cursors.Default;
                         return;
                     }
@@ -438,6 +477,8 @@ namespace MagicLinkWinForm
                     else
                     {
                         tbxMessages.Text = "Request failed";
+                        if (jResult["result"] != null)
+                            tbxMessages.Text += ":\r\n" + extractXMLMessages(jResult["result"]);
                         Cursor.Current = Cursors.Default;
                         return;
                     }

@@ -41,9 +41,10 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnGetContacts = new System.Windows.Forms.Button();
             this.tbxData = new System.Windows.Forms.TextBox();
+            this.btnGetContacts = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tbxResponse = new System.Windows.Forms.TextBox();
             this.btnPost = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -53,7 +54,6 @@
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.txtCompanyName = new System.Windows.Forms.TextBox();
             this.txtContactName = new System.Windows.Forms.TextBox();
-            this.tbxResponse = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -141,12 +141,13 @@
             this.tbxMessages.Location = new System.Drawing.Point(16, 180);
             this.tbxMessages.Multiline = true;
             this.tbxMessages.Name = "tbxMessages";
-            this.tbxMessages.Size = new System.Drawing.Size(292, 52);
+            this.tbxMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbxMessages.Size = new System.Drawing.Size(292, 207);
             this.tbxMessages.TabIndex = 9;
             // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(15, 265);
+            this.btnLogout.Location = new System.Drawing.Point(15, 578);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(75, 23);
             this.btnLogout.TabIndex = 12;
@@ -179,6 +180,29 @@
             this.tabPage1.Text = "Get Data ";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // tbxData
+            // 
+            this.tbxData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbxData.BackColor = System.Drawing.SystemColors.Control;
+            this.tbxData.Location = new System.Drawing.Point(6, 35);
+            this.tbxData.Multiline = true;
+            this.tbxData.Name = "tbxData";
+            this.tbxData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbxData.Size = new System.Drawing.Size(450, 532);
+            this.tbxData.TabIndex = 12;
+            // 
+            // btnGetContacts
+            // 
+            this.btnGetContacts.Location = new System.Drawing.Point(6, 6);
+            this.btnGetContacts.Name = "btnGetContacts";
+            this.btnGetContacts.Size = new System.Drawing.Size(109, 23);
+            this.btnGetContacts.TabIndex = 11;
+            this.btnGetContacts.Text = "Get Contacts";
+            this.btnGetContacts.UseVisualStyleBackColor = true;
+            this.btnGetContacts.Click += new System.EventHandler(this.btnGetContacts_Click);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tbxResponse);
@@ -199,28 +223,18 @@
             this.tabPage2.Text = "Set Data";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btnGetContacts
+            // tbxResponse
             // 
-            this.btnGetContacts.Location = new System.Drawing.Point(6, 6);
-            this.btnGetContacts.Name = "btnGetContacts";
-            this.btnGetContacts.Size = new System.Drawing.Size(109, 23);
-            this.btnGetContacts.TabIndex = 11;
-            this.btnGetContacts.Text = "Get Contacts";
-            this.btnGetContacts.UseVisualStyleBackColor = true;
-            this.btnGetContacts.Click += new System.EventHandler(this.btnGetContacts_Click);
-            // 
-            // tbxData
-            // 
-            this.tbxData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tbxResponse.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxData.BackColor = System.Drawing.SystemColors.Control;
-            this.tbxData.Location = new System.Drawing.Point(6, 35);
-            this.tbxData.Multiline = true;
-            this.tbxData.Name = "tbxData";
-            this.tbxData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbxData.Size = new System.Drawing.Size(450, 532);
-            this.tbxData.TabIndex = 12;
+            this.tbxResponse.BackColor = System.Drawing.SystemColors.Control;
+            this.tbxResponse.Location = new System.Drawing.Point(6, 197);
+            this.tbxResponse.Multiline = true;
+            this.tbxResponse.Name = "tbxResponse";
+            this.tbxResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbxResponse.Size = new System.Drawing.Size(450, 355);
+            this.tbxResponse.TabIndex = 19;
             // 
             // btnPost
             // 
@@ -295,19 +309,6 @@
             this.txtContactName.Name = "txtContactName";
             this.txtContactName.Size = new System.Drawing.Size(240, 20);
             this.txtContactName.TabIndex = 10;
-            // 
-            // tbxResponse
-            // 
-            this.tbxResponse.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxResponse.BackColor = System.Drawing.SystemColors.Control;
-            this.tbxResponse.Location = new System.Drawing.Point(6, 197);
-            this.tbxResponse.Multiline = true;
-            this.tbxResponse.Name = "tbxResponse";
-            this.tbxResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbxResponse.Size = new System.Drawing.Size(450, 355);
-            this.tbxResponse.TabIndex = 19;
             // 
             // MainForm
             // 
