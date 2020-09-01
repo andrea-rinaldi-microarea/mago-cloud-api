@@ -4,7 +4,7 @@ Samples about using the MagoCloud API
 ## Custom MagicLink profiles
 It is not yet possible to create and edit custom profiles in MagoCloud, but it is allowed to upload them.
 
-The custom profiles can be thus created using Mago4 Desktop and upload them in a MagoCloud subscription.
+The custom profiles can be thus created using Mago4 Desktop and then uploaded in a MagoCloud subscription.
 
 **Note**: the data model exposed by the profiles is backward compatible, so that you can use any Mago4 version released prior to the MagoCloud you are using.
 
@@ -28,4 +28,4 @@ C:\Program Files (x86)\Microarea\Mago4\Custom\Companies\MyCompany\Applications\E
  <maxs:Contacts tbNamespace='Document.ERP.Contacts.Documents.Contacts' xTechProfile='MyProfile'    
       xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/AllUsers/MyProfile.xsd'>
  ```
- please note the `AllUsers` in the URI
+ please note the `AllUsers` in the URI.
