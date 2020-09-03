@@ -27,25 +27,6 @@ export class ConnectionService {
     }
   }
 
-  getConnectionHeaders() {
-    var today = new Date();
-    return new HttpHeaders()
-      .set("Authorization", JSON.stringify({
-        Type:"JWT",
-        SecurityValue: this.current.jwtToken
-      }))
-      .set("Server-Info", JSON.stringify({
-        subscription: this.current.subscriptionKey,
-        ui_culture: this.current.ui_culture,
-        culture: this.current.culture,
-        date : {
-          day: today.getDate(),
-          month: today.getMonth(),
-          year: today.getFullYear()
-        }
-      }));
-  }
-
   login(): Observable<Object> {
     var $login = new Observable<Object> ( observer => {
       var loginRequest: LoginRequest = {
@@ -75,8 +56,8 @@ export class ConnectionService {
 
   logout(): Observable<Object> {
     var authorizationData: AuthorizationData = {
-      Type: "JWT",
-      SecurityValue: this.current.jwtToken
+      type: "JWT",
+      securityValue: this.current.jwtToken
     };
 
     var $logout = new Observable<Object> ( observer => {
@@ -91,4 +72,40 @@ export class ConnectionService {
     });
     return $logout;
   }
+
+  private getRequiredHeaders() {
+    var today = new Date();
+    return {
+      authorizationData: {
+        type:"JWT",
+        securityValue: this.current.jwtToken
+      },
+      serverInfo: {
+        subscription: this.current.subscriptionKey,
+        gmtOffset: -60,
+        ui_culture: this.current.ui_culture,
+        culture: this.current.culture,
+        date : {
+          day: today.getDate(),
+          month: today.getMonth(),
+          year: today.getFullYear()
+        }
+      }
+    };
+  }
+
+  getData(xlmParamsBase64: string): Observable<Object> {
+    var getDataRequest = Object.assign({payload: xlmParamsBase64}, this.getRequiredHeaders());
+    var $getData = new Observable<Object> ( observer => {
+      this.http.post(this.baseUrl + "connection/getdata", getDataRequest, { params: {url : this.composeURL("")}}).subscribe((data:any) => {
+        observer.next();
+        observer.complete(); 
+      },
+      (error) => {
+        observer.error(`${error.status} - ${error.error} - ${error.message}`);
+      });
+    });
+    return $getData;
+  }
+
 }

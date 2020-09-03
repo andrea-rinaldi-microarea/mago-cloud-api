@@ -79,5 +79,21 @@ namespace magic_link_ng_dotnet.Controllers
                 };
             }
         }
+
+        [HttpPost("getData")]
+        public async Task<ActionResult<bool>> GetData([FromBody] GetDataRequest getDataRequest, string url)
+        {
+            try
+            {
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                return new ContentResult {
+                    StatusCode = 500,
+                    Content = e.Message
+                };
+            }
+        }
     }
 }

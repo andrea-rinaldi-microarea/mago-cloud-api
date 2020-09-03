@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class GetContactsComponent implements OnInit {
 
+  public alertMessage: string  = null;
+
   constructor(
     public connection: ConnectionService,
     private http: HttpClient,
@@ -24,19 +26,11 @@ export class GetContactsComponent implements OnInit {
   }
 
   onGetContacts() {
-    let headers = this.connection.getConnectionHeaders();
-    let options = new Object({
-      headers: headers,
-      // observe: "response",
-      // withCredentials: true,
-      // responseType: "json"
+    this.connection.getData("ABCD").subscribe(() => {
+    },
+    (error) => {
+      this.alertMessage = error;
     });
-    // this.http.post(this.connection.composeURL("tbserver/api/tb/document/initTBLogin/"), {}, options).subscribe( (data:any) => {
-    //   console.log(document.cookie);
-    // },
-    // (error: any) => {
-    //   console.log(error);
-    // });
   }
 
 }

@@ -36,7 +36,7 @@ export class LoginResponse {
 }
 
 export class AuthorizationData {
-    public Type: string = "JWT";
-    public SecurityValue: string;
+    public type: string = "JWT";
+    public securityValue: string;
 }
 
