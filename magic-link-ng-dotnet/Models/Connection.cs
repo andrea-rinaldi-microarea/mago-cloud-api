@@ -1,18 +1,11 @@
 namespace magic_link_ng_dotnet.Models
 {
-    public class ConnectionRequest {
-        public string rootURL {get; set;}
-        public bool isDebugEnv {get; set;}
-
+    public class LoginRequest {
         public string accountName {get; set;}
         public string password {get; set;}
         public string subscriptionKey {get; set;}
-    }
-
-    public class LogoutRequest {
-        public string rootURL {get; set;}
-        public bool isDebugEnv {get; set;}
-        public string JwtToken {get; set;}
+        public bool overwrite {get; set;}
+        public string appId {get; set;}
     }
 
     public class LoginResponse {
@@ -28,5 +21,9 @@ namespace magic_link_ng_dotnet.Models
         public string SubscriptionCountry {get; set;}
     }
 
+    public class AuthorizationData {
+        public string Type {get; set;}
+        public string SecurityValue {get; set;}
+    }
 
 }

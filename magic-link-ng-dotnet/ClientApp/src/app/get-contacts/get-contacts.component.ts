@@ -31,12 +31,12 @@ export class GetContactsComponent implements OnInit {
       // withCredentials: true,
       // responseType: "json"
     });
-    this.http.post(this.connection.composeURL("tbserver/api/tb/document/initTBLogin/"), {}, options).subscribe( (data:any) => {
-      console.log(document.cookie);
-    },
-    (error: any) => {
-      console.log(error);
-    });
+    // this.http.post(this.connection.composeURL("tbserver/api/tb/document/initTBLogin/"), {}, options).subscribe( (data:any) => {
+    //   console.log(document.cookie);
+    // },
+    // (error: any) => {
+    //   console.log(error);
+    // });
   }
 
 }

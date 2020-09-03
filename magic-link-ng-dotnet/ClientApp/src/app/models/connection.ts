@@ -6,19 +6,17 @@ export class ConnectionInfo {
     public password: string;
     public subscriptionKey: string;
     public jwtToken: string = null;
-    public rootURL: string = "release-v112.mago.cloud";
+    public rootURL: string = "public.mago.cloud";
     public ui_culture: string;
     public culture: string;
     public isDebugEnv: boolean;
 }
 
-export class ConnectionRequest {
-    public rootURL: string = "release-v112.mago.cloud";
-    public isDebugEnv: boolean;
-
+export class LoginRequest {
     public accountName: string;
     public password: string;
     public subscriptionKey: string;
+    public appId: string;
 }
 
 export class LoginResponse {
@@ -36,3 +34,9 @@ export class LoginResponse {
     public subscriptionDesc: string;
     public subscriptionCountry: string;
 }
+
+export class AuthorizationData {
+    public Type: string = "JWT";
+    public SecurityValue: string;
+}
+

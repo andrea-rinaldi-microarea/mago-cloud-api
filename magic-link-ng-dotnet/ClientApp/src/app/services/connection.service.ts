@@ -1,4 +1,4 @@
-import { LoginResponse, ConnectionRequest, ConnectionInfo } from './../models/connection';
+import { LoginResponse, ConnectionInfo, AuthorizationData, LoginRequest } from './../models/connection';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ export class ConnectionService {
     else
       this.current.jwtToken = null; // should not be stored, but just in case
   }
-
+  
   composeURL(path: string): string {
     if (this.current.isDebugEnv) {
       return `http://${this.current.rootURL}/${path}`;
@@ -48,20 +48,23 @@ export class ConnectionService {
 
   login(): Observable<Object> {
     var $login = new Observable<Object> ( observer => {
-      var connectionRequest: ConnectionRequest = {
-        rootURL: this.current.rootURL,
-        isDebugEnv: this.current.isDebugEnv,
+      var loginRequest: LoginRequest = {
         accountName: this.current.accountName,
         password: this.current.password,
-        subscriptionKey: this.current.subscriptionKey
+        subscriptionKey: this.current.subscriptionKey,
+        appId: "M4"
       };
-      this.http.post(this.baseUrl + "connection/login", connectionRequest).subscribe((data:LoginResponse) => {
-        localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
-        this.current.jwtToken = data.jwtToken;
-        this.current.ui_culture = data.language;
-        this.current.culture = data.regionalSettings;
-        observer.next();
-        observer.complete();        
+      this.http.post(this.baseUrl + "connection/login", loginRequest, { params: {url : this.composeURL("account-manager/login")}}).subscribe((data:LoginResponse) => {
+        if (data.jwtToken == "" || data.result == "false") { // some login error, i.e.: bad subscription
+          observer.error(`Result code: ${data.resultCode} - ${data.message}`);
+        } else {
+          localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
+          this.current.jwtToken = data.jwtToken;
+          this.current.ui_culture = data.language;
+          this.current.culture = data.regionalSettings;
+          observer.next();
+          observer.complete();        
+        }
       },
       (error) => {
         observer.error(`${error.status} - ${error.error} - ${error.message}`);
@@ -71,14 +74,13 @@ export class ConnectionService {
   }
 
   logout(): Observable<Object> {
-    var logoutRequest = {
-      rootURL: this.current.rootURL,
-      isDebugEnv: this.current.isDebugEnv,
-      jwtToken : this.current.jwtToken
+    var authorizationData: AuthorizationData = {
+      Type: "JWT",
+      SecurityValue: this.current.jwtToken
     };
 
     var $logout = new Observable<Object> ( observer => {
-      this.http.post(this.baseUrl + "connection/logout", logoutRequest).subscribe((data:any) => {
+      this.http.post(this.baseUrl + "connection/logout", authorizationData, { params: {url : this.composeURL("account-manager/logoff")}}).subscribe((data:any) => {
         this.current.jwtToken = null;
         observer.next();
         observer.complete(); 

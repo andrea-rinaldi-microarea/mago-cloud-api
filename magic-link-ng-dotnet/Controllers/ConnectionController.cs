@@ -13,34 +13,14 @@ namespace magic_link_ng_dotnet.Controllers
     {
         private HttpClient httpClient = new HttpClient();
 
-        private string composeURL(string path, bool isDebugEnv, string rootURL) 
-        {
-            if (isDebugEnv) 
-            {
-                return $"http://{rootURL}/{path}";
-            } 
-            else 
-            {
-                return $"https://{rootURL}/be/{path}";
-            }
-        }
-
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] ConnectionRequest connectionRequest)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest loginRequest, string url)
         {
-            var loginData = JsonConvert.SerializeObject(new
-            {
-                AccountName = connectionRequest.accountName,
-                Password = connectionRequest.password,
-                AppId = "M4",
-                subscriptionkey = connectionRequest.subscriptionKey
-            });
-
             try
             {
                 var response = await httpClient.PostAsync(
-                    composeURL("account-manager/login", connectionRequest.isDebugEnv, connectionRequest.rootURL), 
-                    new StringContent(loginData, System.Text.Encoding.UTF8, "application/json")
+                    url, 
+                    new StringContent(JsonConvert.SerializeObject(loginRequest), System.Text.Encoding.UTF8, "application/json")
                 );
                 if (!response.IsSuccessStatusCode)
                 {
@@ -72,17 +52,12 @@ namespace magic_link_ng_dotnet.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<ActionResult<bool>> Logout([FromBody] LogoutRequest request)
+        public async Task<ActionResult<bool>> Logout([FromBody] AuthorizationData authorizationData, string url)
         {
-            var authorizationData = JsonConvert.SerializeObject(new
-            {
-                Type = "JWT",
-                SecurityValue = request.JwtToken
-            });
             try
             {
-                HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, composeURL("account-manager/logoff", request.isDebugEnv, request.rootURL));
-                msg.Headers.TryAddWithoutValidation("Authorization", authorizationData);
+                HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url);
+                msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(authorizationData));
                 msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
                 var response = await httpClient.SendAsync(msg);
 
