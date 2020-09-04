@@ -95,10 +95,10 @@ export class ConnectionService {
   }
 
   getData(xlmParamsBase64: string): Observable<Object> {
-    var getDataRequest = Object.assign({payload: xlmParamsBase64}, this.getRequiredHeaders());
+    var getDataRequest = Object.assign({ payload: xlmParamsBase64, loginName: this.current.accountName }, this.getRequiredHeaders());
     var $getData = new Observable<Object> ( observer => {
       this.http.post(this.baseUrl + "connection/getdata", getDataRequest, { params: {url : this.composeURL("")}}).subscribe((data:any) => {
-        observer.next();
+        observer.next(data);
         observer.complete(); 
       },
       (error) => {

@@ -44,6 +44,7 @@ namespace magic_link_ng_dotnet.Models
         public AuthorizationData authorizationData {get; set;}
         public ServerInfo serverInfo {get; set;}
         public string payload {get; set;}
+        public string loginName {get; set;}
     }
 
 }

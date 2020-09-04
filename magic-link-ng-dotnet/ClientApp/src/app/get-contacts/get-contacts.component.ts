@@ -26,7 +26,17 @@ export class GetContactsComponent implements OnInit {
   }
 
   onGetContacts() {
-    this.connection.getData("ABCD").subscribe(() => {
+    var xmlParam =
+    `<?xml version='1.0' encoding='utf-8'?>
+    <maxs:Contacts tbNamespace='Document.ERP.Contacts.Documents.Contacts' xTechProfile='DefaultLight' xmlns:maxs='http://www.microarea.it/Schema/2004/Smart/ERP/Contacts/Contacts/Standard/DefaultLight.xsd'>
+        <maxs:Parameters>
+        </maxs:Parameters>
+    </maxs:Contacts>`;
+    this.connection.getData(btoa(xmlParam)).subscribe((base64Result: string[]) => {
+      var result = [];
+      base64Result.forEach(base64Item => {
+        result.push(atob(base64Item));
+      })
     },
     (error) => {
       this.alertMessage = error;
