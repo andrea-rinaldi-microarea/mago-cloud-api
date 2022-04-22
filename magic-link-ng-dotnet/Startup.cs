@@ -1,3 +1,4 @@
+using magic_link_ng_dotnet.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,7 @@ namespace magic_link_ng_dotnet
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            services.AddSingleton<MagoAPIClientWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

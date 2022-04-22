@@ -9,34 +9,23 @@ export class ConnectionInfo {
     public rootURL: string = "public.mago.cloud";
     public ui_culture: string;
     public culture: string;
-    public isDebugEnv: boolean;
 }
 
 export class LoginRequest {
+    public url: string;
     public accountName: string;
     public password: string;
     public subscriptionKey: string;
-    public appId: string;
 }
 
-export class LoginResponse {
+export class TbUserData {
     constructor(
     ) {}
 
-    public jwtToken: string;
-    public language: string;
-    public message: string;
-    public regionalSettings:string;
-    public result: string;
-    public resultCode: number;
-    public accountName: string;
+    public token: string;
+    public userName: string;
+    public password: string;
     public subscriptionKey: string;
-    public subscriptionDesc: string;
-    public subscriptionCountry: string;
-}
-
-export class AuthorizationData {
-    public type: string = "JWT";
-    public securityValue: string;
+    public isLogged: boolean;
 }
 

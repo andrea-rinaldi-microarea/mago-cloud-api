@@ -13,42 +13,40 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using Microarea.Tbf.Model.API;
+using Microarea.Tbf.Model.Interfaces.API;
+
 namespace magic_link_ng_dotnet.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class ConnectionController : ControllerBase
     {
+        private readonly MagoAPIClientWrapper _magoAPI;
+
+        public ConnectionController(MagoAPIClientWrapper magoAPI)
+        {
+            _magoAPI = magoAPI;
+        }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest loginRequest, string url)
+        public async Task<ActionResult<TbUserData>> Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                HttpClient httpClient = new HttpClient();
-                var response = await httpClient.PostAsync(
-                    url, 
-                    new StringContent(JsonConvert.SerializeObject(loginRequest), System.Text.Encoding.UTF8, "application/json")
-                );
-                if (!response.IsSuccessStatusCode)
+                _magoAPI.client = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
+
+                IAccountManagerResult result = await _magoAPI.client.AccountManager?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
+
+                if (!result.Success || result.UserData == null || !result.UserData.IsLogged)
                 {
                     return new ContentResult {
-                        StatusCode = (int)response.StatusCode,
-                        Content = $"Error on login: {response.ReasonPhrase}"
+                        StatusCode = result.StatusCode,
+                        Content = $"Error on login: {result.ReturnValue}"
                     };
                 }
 
-                string result = response.Content.ReadAsStringAsync().Result;
-                if (string.IsNullOrEmpty(result))
-                {
-                    return new ContentResult {
-                        StatusCode = 500,
-                        Content = "Invalid login"
-                    };
-                }
-
-                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(result);
-                return loginResponse;
+                return (TbUserData)result.UserData;
             }
             catch (System.Exception e)
             {
@@ -60,25 +58,41 @@ namespace magic_link_ng_dotnet.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<ActionResult<bool>> Logout([FromBody] AuthorizationData authorizationData, string url)
+        public async Task<ActionResult<bool>> Logout([FromBody] TbUserDataWrapper userData)
         {
+            if (_magoAPI.client == null)
+            {
+                return new ContentResult {
+                    StatusCode = 500,
+                    Content = "Error on logout: not logged in"
+                };
+            }
             try
             {
-                HttpClient httpClient = new HttpClient();
-                HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url);
-                msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(authorizationData));
-                msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-                var response = await httpClient.SendAsync(msg);
-
-                if (!response.IsSuccessStatusCode)
+                IAccountManagerResult isValid = await _magoAPI.client.AccountManager.IsValid(userData.Token, userData.SubscriptionKey);
+                if (isValid.Success)
+                {
+                    IAccountManagerResult result = await _magoAPI.client.AccountManager.Logout(userData.Token, userData.SubscriptionKey);
+                    if (result.Success)
+                    {
+                        _magoAPI.client = null;
+                        return true;
+                    }
+                    else
+                    {
+                        return new ContentResult {
+                            StatusCode = result.StatusCode,
+                            Content = $"Error on logout: {result.ReturnValue}"
+                        };
+                    }
+                }
+                else
                 {
                     return new ContentResult {
-                        StatusCode = (int)response.StatusCode,
-                        Content = $"Error on logout: {response.ReasonPhrase}"
+                        StatusCode = 500,
+                        Content = "Login no more valid, logout failed."
                     };
                 }
-
-                return true;
             }
             catch (System.Exception e)
             {
@@ -99,7 +113,7 @@ namespace magic_link_ng_dotnet.Controllers
                 HttpClient httpClient = new HttpClient(httpClientHandler);
                 HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url + "tbserver/api/tb/document/initTBLogin/");
                 msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-                msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
+                // msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
                 msg.Headers.TryAddWithoutValidation("Server-Info", JsonConvert.SerializeObject(getDataRequest.serverInfo));
                 var response = await httpClient.SendAsync(msg);
 
@@ -154,7 +168,7 @@ namespace magic_link_ng_dotnet.Controllers
                 msg = new HttpRequestMessage(HttpMethod.Post, url + "tbserver/api/tb/document/runRestFunction/");
                 msg.Content = new StringContent(content: functionParams, encoding: Encoding.UTF8, mediaType: "application/json");
                 msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-                msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
+                // msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
 
                 httpClientHandler = new HttpClientHandler();
                 httpClientHandler.CookieContainer = new CookieContainer();

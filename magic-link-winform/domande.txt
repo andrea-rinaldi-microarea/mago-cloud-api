@@ -1,5 +1,0 @@
-sequenza:
-login che torna jwt
-initTbLogin, torna cookie per sticky session
-chiamate successive, jwt + cookie
-chiamata rest con payload json + payload XML encoded base64

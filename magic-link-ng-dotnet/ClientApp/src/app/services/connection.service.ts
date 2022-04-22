@@ -1,4 +1,4 @@
-import { LoginResponse, ConnectionInfo, AuthorizationData, LoginRequest } from './../models/connection';
+import { TbUserData, ConnectionInfo, LoginRequest } from './../models/connection';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -19,30 +19,20 @@ export class ConnectionService {
       this.current.jwtToken = null; // should not be stored, but just in case
   }
   
-  composeURL(path: string): string {
-    if (this.current.isDebugEnv) {
-      return `http://${this.current.rootURL}/${path}`;
-    } else {
-      return `https://${this.current.rootURL}/be/${path}`;
-    }
-  }
-
   login(): Observable<Object> {
     var $login = new Observable<Object> ( observer => {
       var loginRequest: LoginRequest = {
+        url: `http://${this.current.rootURL}`,
         accountName: this.current.accountName,
         password: this.current.password,
-        subscriptionKey: this.current.subscriptionKey,
-        appId: "M4"
+        subscriptionKey: this.current.subscriptionKey
       };
-      this.http.post(this.baseUrl + "connection/login", loginRequest, { params: {url : this.composeURL("account-manager/login")}}).subscribe((data:LoginResponse) => {
-        if (data.jwtToken == "" || data.result == "false") { // some login error, i.e.: bad subscription
-          observer.error(`Result code: ${data.resultCode} - ${data.message}`);
+      this.http.post(this.baseUrl + "connection/login", loginRequest).subscribe((data:TbUserData) => {
+        if (data.token == "" || data.isLogged == false) { // some login error, i.e.: bad subscription
+          observer.error("Login failed unexpectedly.");
         } else {
           localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
-          this.current.jwtToken = data.jwtToken;
-          this.current.ui_culture = data.language;
-          this.current.culture = data.regionalSettings;
+          this.current.jwtToken = data.token;
           observer.next();
           observer.complete();        
         }
@@ -55,13 +45,15 @@ export class ConnectionService {
   }
 
   logout(): Observable<Object> {
-    var authorizationData: AuthorizationData = {
-      type: "JWT",
-      securityValue: this.current.jwtToken
-    };
-
     var $logout = new Observable<Object> ( observer => {
-      this.http.post(this.baseUrl + "connection/logout", authorizationData, { params: {url : this.composeURL("account-manager/logoff")}}).subscribe((data:any) => {
+      var data: TbUserData = {
+        token: this.current.jwtToken,
+        userName: this.current.accountName,
+        password: this.current.password,
+        subscriptionKey: this.current.subscriptionKey,
+        isLogged: true
+      }
+      this.http.post(this.baseUrl + "connection/logout", data).subscribe((data:any) => {
         this.current.jwtToken = null;
         observer.next();
         observer.complete(); 
@@ -97,7 +89,7 @@ export class ConnectionService {
   getData(xlmParamsBase64: string): Observable<Object> {
     var getDataRequest = Object.assign({ payload: xlmParamsBase64, loginName: this.current.accountName }, this.getRequiredHeaders());
     var $getData = new Observable<Object> ( observer => {
-      this.http.post(this.baseUrl + "connection/getdata", getDataRequest, { params: {url : this.composeURL("")}}).subscribe((data:any) => {
+      this.http.post(this.baseUrl + "connection/getdata", getDataRequest, { params: {url : ""}}).subscribe((data:any) => {
         observer.next(data);
         observer.complete(); 
       },
