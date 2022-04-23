@@ -19,10 +19,18 @@ export class ConnectionService {
       this.current.jwtToken = null; // should not be stored, but just in case
   }
   
+  composeURL(): string {
+    if (this.current.isDebugEnv) {
+      return `http://${this.current.rootURL}`;
+    } else {
+      return `https://${this.current.rootURL}`;
+    }
+  }
+
   login(): Observable<Object> {
     var $login = new Observable<Object> ( observer => {
       var loginRequest: LoginRequest = {
-        url: `https://${this.current.rootURL}`,
+        url: this.composeURL(),
         accountName: this.current.accountName,
         password: this.current.password,
         subscriptionKey: this.current.subscriptionKey

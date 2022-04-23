@@ -9,6 +9,7 @@ export class ConnectionInfo {
     public rootURL: string = "public.mago.cloud";
     public ui_culture: string;
     public culture: string;
+    public isDebugEnv: boolean;
 }
 
 export class LoginRequest {

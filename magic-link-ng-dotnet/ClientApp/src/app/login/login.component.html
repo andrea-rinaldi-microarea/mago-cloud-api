@@ -3,8 +3,17 @@
         <form>
             <div class="form-group col-6 mt-3">
                 <label for="rootURL">Connect to</label>
-                <input type="text" class="form-control" name="rootURL" id="rootURL" [(ngModel)]="connection.current.rootURL">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{connection.current.isDebugEnv ? "http://" : "https://"}}</span>
+                    </div>
+                    <input type="text" class="form-control" name="rootURL" id="rootURL" [(ngModel)]="connection.current.rootURL">
+                </div>
             </div>        
+            <div class="form-group form-check ml-3">
+                <input type="checkbox" class="form-check-input" name="isDebugEnv" id="isDebugEnv" [(ngModel)]="connection.current.isDebugEnv">
+                <label class="form-check-label" for="isDebugEnv">Debug environment</label>
+            </div>
             <div class="form-group col-6 mt-3">
                 <label for="accountName">Account Name</label>
                 <input type="text" class="form-control" name="accountName" id="accountName" [(ngModel)]="connection.current.accountName">
