@@ -22,7 +22,7 @@ export class ConnectionService {
   login(): Observable<Object> {
     var $login = new Observable<Object> ( observer => {
       var loginRequest: LoginRequest = {
-        url: `http://${this.current.rootURL}`,
+        url: `https://${this.current.rootURL}`,
         accountName: this.current.accountName,
         password: this.current.password,
         subscriptionKey: this.current.subscriptionKey
