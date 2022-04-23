@@ -16,6 +16,16 @@ namespace magic_link_ng_dotnet.Models
         public TbUserDataWrapper userData {get; set;}
     }
 
+    public class SetDataRequest {
+        public string xmlData {get; set;}
+        public TbUserDataWrapper userData {get; set;}
+    }
+
+    public class SetDataResponse {
+        public string xmlData {get; set;}
+        public string warnings {get; set;}
+    }
+
     public class MagoAPIClientWrapper {
         public MagoAPIClient client = null;
     }

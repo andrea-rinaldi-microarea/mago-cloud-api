@@ -9,13 +9,15 @@ import { GetContactsComponent } from './get-contacts/get-contacts.component';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { PostContactComponent } from './post-contact/post-contact.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     MenuComponent,
-    GetContactsComponent
+    GetContactsComponent,
+    PostContactComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

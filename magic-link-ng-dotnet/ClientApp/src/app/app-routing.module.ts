@@ -1,4 +1,5 @@
 import { GetContactsComponent } from './get-contacts/get-contacts.component';
+import { PostContactComponent } from './post-contact/post-contact.component';
 import { MenuComponent } from './menu/menu.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'get-contacts',
     component: GetContactsComponent,
+  },
+  {
+    path: 'post-contact',
+    component: PostContactComponent,
   }
 ];
 @NgModule({

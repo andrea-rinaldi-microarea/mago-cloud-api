@@ -96,4 +96,28 @@ export class ConnectionService {
     return $getData;
   }
 
+  setData(xmlData: string): Observable<Object> {
+    var request = {
+      xmlData: xmlData,
+      userData: {
+        token: this.current.jwtToken,
+        userName: this.current.accountName,
+        password: this.current.password,
+        subscriptionKey: this.current.subscriptionKey,
+        isLogged: true
+      }
+    }
+    var $setData = new Observable<Object> ( observer => {
+      this.http.post(this.baseUrl + "connection/setdata", request).subscribe((data:any) => {
+        observer.next(data);
+        observer.complete(); 
+      },
+      (error) => {
+        observer.error(`${error.status} - ${error.error} - ${error.message}`);
+      });
+    });
+    return $setData;
+  }
+
+
 }

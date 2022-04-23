@@ -30,3 +30,9 @@ export class TbUserData {
     public isLogged: boolean;
 }
 
+export class SetDataResponse {
+    public xmlData: string;
+    public warnings: string;
+}
+
+

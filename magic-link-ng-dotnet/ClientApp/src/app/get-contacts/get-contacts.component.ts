@@ -1,7 +1,5 @@
-import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ConnectionService } from '../services/connection.service';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +16,6 @@ export class GetContactsComponent implements OnInit {
 
   constructor(
     public connection: ConnectionService,
-    private http: HttpClient,
     private router: Router
   ) { }
 

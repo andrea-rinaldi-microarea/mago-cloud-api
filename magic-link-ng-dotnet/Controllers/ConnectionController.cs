@@ -164,6 +164,58 @@ namespace magic_link_ng_dotnet.Controllers
             }
         }
 
+        [HttpPost("setData")]
+        public async Task<ActionResult<SetDataResponse>> SetData([FromBody] SetDataRequest request)
+        {
+            if (_magoAPI.client == null)
+            {
+                return new ContentResult {
+                    StatusCode = 500,
+                    Content = "Error on logout: not logged in"
+                };
+            }
+            try
+            {
+                ITbServerMagicLinkResult tbResult = await _magoAPI.client.TbServer?.SetXmlData(request.userData, request.xmlData, 0, DateTime.Now);
+
+                if (!tbResult.Success)
+                {
+                    return new ContentResult {
+                        StatusCode = 500,
+                        Content = $"Error in SetData\r\n{tbResult.ReturnValue}"
+                    };
+                }
+                if (tbResult.Xmls.Count == 0)
+                {
+                    return new ContentResult {
+                        StatusCode = 500,
+                        Content = "No postback received"
+                    };
+                }
+
+                var strMessages = extractXMLMessages(tbResult.Xmls[0], out bool hasErrors);
+                if (hasErrors)
+                {
+                    return new ContentResult {
+                        StatusCode = 500,
+                        Content = $"Request failed:\r\n{strMessages}"
+                    };
+                }
+
+                return new SetDataResponse {
+                    xmlData = tbResult.Xmls[0],
+                    warnings = strMessages
+                }; 
+            }
+            catch (System.Exception e)
+            {
+                return new ContentResult {
+                    StatusCode = 500,
+                    Content = e.Message
+                };
+            }
+        }
+
         private string extractXMLMessages(string xmlResult, out bool hasErrors)
         {
             hasErrors = false;
