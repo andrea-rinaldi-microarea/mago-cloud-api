@@ -38,10 +38,17 @@ export class ConnectionService {
         appId: "M4"
       };
       this.http.post(this.composeURL("account-manager/login"), loginRequest).subscribe((data:LoginResponse) => {
-        localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
-        this.current.jwtToken = data.JwtToken;
-        observer.next();
-        observer.complete();        
+        if (data.JwtToken == "" || data.SubscriptionKey == "") { // some login error, i.e.: bad subscription
+          observer.error(`Login failed: ${data.Message}`);
+        } else {
+          localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
+          this.current.jwtToken = data.JwtToken;
+          observer.next();
+          observer.complete();        
+        }
+      },
+      (error) => {
+        observer.error(`${error.status} - ${error.error} - ${error.message}`);
       });
     }) 
     return $login;

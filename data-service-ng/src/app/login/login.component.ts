@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  public alertMessage: string  = null;
+  
   constructor(
     public connection: ConnectionService,
     private router: Router
@@ -20,11 +22,17 @@ export class LoginComponent implements OnInit {
   onLogin() {
     this.connection.login().subscribe(() => {
       this.router.navigate(['menu']);
+    },
+    (error) => {
+      this.alertMessage = error;
     });
   }
   onLogout() {
     this.connection.logout().subscribe(() => {
 
+    },
+    (error) => {
+      this.alertMessage = error;
     });
   }
 }
