@@ -11,24 +11,9 @@ namespace magic_link_ng_dotnet.Models
         public string appId {get; set;}
     }
 
-    public class DateInfo {
-        public int day {get; set;}
-        public int month {get; set;}
-        public int year {get; set;}
-    }
-
-    public class ServerInfo {
-        public string subscription {get; set;}
-        public int gmtOffset {get; set;}
-        public string ui_culture {get; set;}
-        public string culture {get; set;}
-        public DateInfo date {get; set;}
-    }
-
     public class GetDataRequest {
-        public ServerInfo serverInfo {get; set;}
-        public string payload {get; set;}
-        public string loginName {get; set;}
+        public string xmlParams {get; set;}
+        public TbUserDataWrapper userData {get; set;}
     }
 
     public class MagoAPIClientWrapper {

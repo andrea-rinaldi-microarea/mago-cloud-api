@@ -73,31 +73,19 @@ export class ConnectionService {
     return $logout;
   }
 
-  private getRequiredHeaders() {
-    var today = new Date();
-    return {
-      authorizationData: {
-        type:"JWT",
-        securityValue: this.current.jwtToken
-      },
-      serverInfo: {
-        subscription: this.current.subscriptionKey,
-        gmtOffset: -60,
-        ui_culture: this.current.ui_culture,
-        culture: this.current.culture,
-        date : {
-          day: today.getDate(),
-          month: today.getMonth(),
-          year: today.getFullYear()
-        }
+  getData(xmlParams: string): Observable<Object> {
+    var request = {
+      xmlParams: xmlParams,
+      userData: {
+        token: this.current.jwtToken,
+        userName: this.current.accountName,
+        password: this.current.password,
+        subscriptionKey: this.current.subscriptionKey,
+        isLogged: true
       }
-    };
-  }
-
-  getData(xlmParamsBase64: string): Observable<Object> {
-    var getDataRequest = Object.assign({ payload: xlmParamsBase64, loginName: this.current.accountName }, this.getRequiredHeaders());
+    }
     var $getData = new Observable<Object> ( observer => {
-      this.http.post(this.baseUrl + "connection/getdata", getDataRequest, { params: {url : ""}}).subscribe((data:any) => {
+      this.http.post(this.baseUrl + "connection/getdata", request).subscribe((data:any) => {
         observer.next(data);
         observer.complete(); 
       },

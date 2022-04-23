@@ -104,133 +104,56 @@ namespace magic_link_ng_dotnet.Controllers
         }
 
         [HttpPost("getData")]
-        public async Task<ActionResult<IEnumerable<string>>> GetData([FromBody] GetDataRequest getDataRequest, string url)
+        public async Task<ActionResult<IEnumerable<string>>> GetData([FromBody] GetDataRequest request)
         {
+            if (_magoAPI.client == null)
+            {
+                return new ContentResult {
+                    StatusCode = 500,
+                    Content = "Error on logout: not logged in"
+                };
+            }
             try
             {
-                // Step 1 - invoke the initTBLogin to establish the communication with the back-end
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
-                HttpClient httpClient = new HttpClient(httpClientHandler);
-                HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url + "tbserver/api/tb/document/initTBLogin/");
-                msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-                // msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
-                msg.Headers.TryAddWithoutValidation("Server-Info", JsonConvert.SerializeObject(getDataRequest.serverInfo));
-                var response = await httpClient.SendAsync(msg);
+                string xmlParams = request.xmlParams;
+                ITbServerMagicLinkResult tbResult = await _magoAPI.client.TbServer?.GetXmlData(request.userData, request.xmlParams, DateTime.Now);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    return new ContentResult {
-                        StatusCode = (int)response.StatusCode,
-                        Content = $"Error on GetData - initTBLogin: {response.ReasonPhrase}"
-                    };
-                }
-
-                string result = response.Content.ReadAsStringAsync().Result;
-                if (string.IsNullOrEmpty(result))
+                if (!tbResult.Success)
                 {
                     return new ContentResult {
                         StatusCode = 500,
-                        Content = "GetData - initTBLogin: Invalid response"
+                        Content = $"Error in GetData\r\n{tbResult.ReturnValue}"
                     };
                 }
-                JObject jResult = JsonConvert.DeserializeObject<JObject>(result);
-                JToken ok = jResult["success"];
-                bool bOk = ok == null ? false : ok.Value<bool>();
-                //@@TODO manage the case for "success" = true and "hasError" = true
-
-                // Step 2 - extract the cookies for the subsequent call
-                IEnumerable<Cookie> cookies = null;
-                if (bOk)
-                {
-                    cookies = httpClientHandler.CookieContainer.GetCookies(msg.RequestUri);
-                }
-                else
+                if (tbResult.Xmls.Count == 0)
                 {
                     return new ContentResult {
                         StatusCode = 500,
-                        Content = "GetData - initTBLogin: Request failed - " + jResult["message"]["text"].Value<string>()
+                        Content = "No data extracted"
                     };
                 }
 
-                // Step 3 - invoke the GetData via REST
-                var functionParams = JsonConvert.SerializeObject(new
+                // just 1 result can be an error or warning message
+                if (tbResult.Xmls.Count == 1)
                 {
-                    ns = "Extensions.XEngine.TBXmlTransfer.GetDataRest",
-                    args = new
-                    {
-                        param = getDataRequest.payload,
-                        useApproximation = true,
-                        loginName = getDataRequest.loginName,
-                        result = "data"
-                    }
-                });
-
-                msg = new HttpRequestMessage(HttpMethod.Post, url + "tbserver/api/tb/document/runRestFunction/");
-                msg.Content = new StringContent(content: functionParams, encoding: Encoding.UTF8, mediaType: "application/json");
-                msg.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-                // msg.Headers.TryAddWithoutValidation("Authorization", JsonConvert.SerializeObject(getDataRequest.authorizationData));
-
-                httpClientHandler = new HttpClientHandler();
-                httpClientHandler.CookieContainer = new CookieContainer();
-                foreach (var cookie in cookies)
-                {
-                    httpClientHandler.CookieContainer.Add(msg.RequestUri, cookie);
-                }
-                httpClient = new HttpClient(httpClientHandler);
-
-                response = await httpClient.SendAsync(msg);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return new ContentResult {
-                        StatusCode = (int)response.StatusCode,
-                        Content = $"Error on GetData - runRestFunction: {response.ReasonPhrase}"
-                    };
-                }
-
-                result = response.Content.ReadAsStringAsync().Result;
-                if (string.IsNullOrEmpty(result))
-                {
-                    return new ContentResult {
-                        StatusCode = 500,
-                        Content = "GetData - runRestFunction: Invalid response"
-                    };
-                }
-                jResult = JsonConvert.DeserializeObject<JObject>(result);
-                bool bSuccess = (jResult["success"] != null) ? jResult["success"].Value<bool>() : false;
-                bool bRetVal = (jResult["retVal"] != null) ? jResult["retVal"].Value<bool>() : false;
-
-                if (bSuccess && bRetVal) 
-                {
-                    IEnumerable<string> data = jResult["result"].Values<string>();
-                    return new List<string>(data);
-                }
-                else if (bSuccess && !bRetVal)
-                {
-                    string errors, warnings;
-                    extractXMLMessages((JToken)jResult["result"], out errors, out warnings);
-                    if (errors != string.Empty)
+                    var strMessages = extractXMLMessages(tbResult.Xmls[0], out bool hasErrors);
+                    if (hasErrors)
                     {
                         return new ContentResult {
                             StatusCode = 500,
-                            Content = "GetData - runRestFunction: Request failed - " + errors + warnings
+                            Content = $"Request failed:\r\n{strMessages}"
                         };
                     }
-                    else 
+                    else if (strMessages != string.Empty)
                     {
                         return new ContentResult {
-                            StatusCode = 501, // not implemented -> warning
-                            Content = "GetData - runRestFunction: " + warnings
+                            StatusCode = 500,
+                            Content = $"Request completed with warnings:\r\n{strMessages}"
                         };
                     }
                 }
-                else
-                {
-                    return new ContentResult {
-                        StatusCode = 500,
-                        Content = "GetData - runRestFunction: Request failed - " + jResult["message"].Value<string>()
-                    };
-                }
+
+                return tbResult.Xmls;
             }
             catch (System.Exception e)
             {
@@ -241,35 +164,39 @@ namespace magic_link_ng_dotnet.Controllers
             }
         }
 
-        private void extractXMLMessages(JToken result, out string errors, out string warnings)
+        private string extractXMLMessages(string xmlResult, out bool hasErrors)
         {
-            errors = string.Empty;
-            warnings = string.Empty;
-            if (result == null)
-                return;
+            hasErrors = false;
+            if (xmlResult == string.Empty)
+                return string.Empty;
 
-            XDocument xmlMessages = XDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(result.ToArray()[0].ToString())));
-            var ns = xmlMessages.Root.Name.Namespace;
+            XDocument xmlMessages = XDocument.Parse(xmlResult);
             XmlNamespaceManager mgr = new XmlNamespaceManager(new NameTable());
+            var ns = xmlMessages.Root.Name.Namespace;
             mgr.AddNamespace("maxs", ns.NamespaceName);
 
-            IEnumerable<XElement> elems = xmlMessages.XPathSelectElements("//maxs:Error", mgr);
-            if (elems.Count() > 0)
-            {
-                foreach (XElement elem in elems)
-                {
-                    errors += " " + elem.XPathSelectElement("maxs:Message", mgr).Value;
-                }
-            }
-            elems = xmlMessages.XPathSelectElements("//maxs:Warning", mgr);
-            if (elems.Count() > 0)
-            {
-                foreach (XElement elem in elems)
-                {
-                    warnings += " " + elem.XPathSelectElement("maxs:Message", mgr).Value;
-                }
-            }
-        }
+            string resultText = string.Empty;
 
+            IEnumerable<XElement> elems = xmlMessages.XPathSelectElements("//maxs:Warning", mgr);
+            if (elems.Count() > 0)
+            {
+                resultText += "\r\nWarnings:\r\n";
+                foreach (XElement elem in elems)
+                {
+                    resultText += elem.XPathSelectElement("maxs:Message", mgr).Value;
+                }
+            }
+            elems = xmlMessages.XPathSelectElements("//maxs:Error", mgr);
+            if (elems.Count() > 0)
+            {
+                hasErrors = true;
+                resultText += "\r\nErrors:\r\n";
+                foreach (XElement elem in elems)
+                {
+                    resultText += elem.XPathSelectElement("maxs:Message", mgr).Value;
+                }
+            }
+            return resultText;
+        }
     }
 }
