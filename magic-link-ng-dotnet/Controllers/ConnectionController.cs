@@ -22,7 +22,7 @@ namespace magic_link_ng_dotnet.Controllers
     [Route("[controller]")]
     public class ConnectionController : ControllerBase
     {
-        private readonly MagoAPIClientWrapper _magoAPI;
+        private MagoAPIClientWrapper _magoAPI;
 
         public ConnectionController(MagoAPIClientWrapper magoAPI)
         {
@@ -34,9 +34,9 @@ namespace magic_link_ng_dotnet.Controllers
         {
             try
             {
-                _magoAPI.client = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
+                _magoAPI.Client = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
 
-                IAccountManagerResult result = await _magoAPI.client.AccountManager?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
+                IAccountManagerResult result = await _magoAPI.Client.AccountManager?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
 
                 if (!result.Success || result.UserData == null || !result.UserData.IsLogged)
                 {
@@ -60,7 +60,7 @@ namespace magic_link_ng_dotnet.Controllers
         [HttpPost("logout")]
         public async Task<ActionResult<bool>> Logout([FromBody] TbUserDataWrapper userData)
         {
-            if (_magoAPI.client == null)
+            if (_magoAPI.Client == null)
             {
                 return new ContentResult {
                     StatusCode = 500,
@@ -69,13 +69,13 @@ namespace magic_link_ng_dotnet.Controllers
             }
             try
             {
-                IAccountManagerResult isValid = await _magoAPI.client.AccountManager.IsValid(userData.Token, userData.SubscriptionKey);
+                IAccountManagerResult isValid = await _magoAPI.Client.AccountManager.IsValid(userData.Token, userData.SubscriptionKey);
                 if (isValid.Success)
                 {
-                    IAccountManagerResult result = await _magoAPI.client.AccountManager.Logout(userData.Token, userData.SubscriptionKey);
+                    IAccountManagerResult result = await _magoAPI.Client.AccountManager.Logout(userData.Token, userData.SubscriptionKey);
                     if (result.Success)
                     {
-                        _magoAPI.client = null;
+                        _magoAPI.Client = null;
                         return true;
                     }
                     else
@@ -106,17 +106,18 @@ namespace magic_link_ng_dotnet.Controllers
         [HttpPost("getData")]
         public async Task<ActionResult<IEnumerable<string>>> GetData([FromBody] GetDataRequest request)
         {
-            if (_magoAPI.client == null)
+            if (_magoAPI.Client == null)
             {
                 return new ContentResult {
                     StatusCode = 500,
-                    Content = "Error on logout: not logged in"
+                    Content = "Error on GetData: not logged in"
                 };
             }
             try
             {
                 string xmlParams = request.xmlParams;
-                ITbServerMagicLinkResult tbResult = await _magoAPI.client.TbServer?.GetXmlData(request.userData, request.xmlParams, DateTime.Now);
+
+                ITbServerMagicLinkResult tbResult = await _magoAPI.Client.TbServer?.GetXmlData(request.userData, request.xmlParams, DateTime.Now);
 
                 if (!tbResult.Success)
                 {
@@ -167,16 +168,16 @@ namespace magic_link_ng_dotnet.Controllers
         [HttpPost("setData")]
         public async Task<ActionResult<SetDataResponse>> SetData([FromBody] SetDataRequest request)
         {
-            if (_magoAPI.client == null)
+            if (_magoAPI.Client == null)
             {
                 return new ContentResult {
                     StatusCode = 500,
-                    Content = "Error on logout: not logged in"
+                    Content = "Error on SetData: not logged in"
                 };
             }
             try
             {
-                ITbServerMagicLinkResult tbResult = await _magoAPI.client.TbServer?.SetXmlData(request.userData, request.xmlData, 0, DateTime.Now);
+                ITbServerMagicLinkResult tbResult = await _magoAPI.Client.TbServer?.SetXmlData(request.userData, request.xmlData, 0, DateTime.Now);
 
                 if (!tbResult.Success)
                 {

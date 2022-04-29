@@ -27,7 +27,7 @@ namespace magic_link_ng_dotnet.Models
     }
 
     public class MagoAPIClientWrapper {
-        public MagoAPIClient client = null;
+        public MagoAPIClient Client = null;
     }
 
     public class TbUserDataWrapper : TbUserData
