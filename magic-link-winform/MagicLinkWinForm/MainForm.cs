@@ -59,7 +59,6 @@ namespace MagicLinkWinForm
             catch (Exception ex)
             {
                 tbxMessages.Text = ex.Message;
-                throw;
             }
         }
 
