@@ -25,32 +25,57 @@ var magicLink = {
         }
     }
 
+    function retrieveAccountManagerURL() {
+        if (document.login["isDebugEnv"].checked) {
+            console.log("Debug environment not yet supported");
+        } else {
+            // var url = `https://${document.login["rootURL"].value}/gwam_mapper/api/services/url/${document.login["subscriptionKey"].value}/ACCOUNTMANAGER`;
+            var url = `https://${document.login["rootURL"].value}/gwam_mapper/api/snapshotcontainer/I-RELEASE?subscriptionKey=${document.login["subscriptionKey"].value}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                success: function(data, textStatus, xhr) {
+                    console.log("Successful call, textStatus: '" + textStatus + "'");
+                    console.log(data);
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    console.log("Error on call, textStatus: '" + textStatus + "'\n errorThrown: '" + errorThrown + "'");
+                }
+            });        
+        }
+    }
+
     magicLink.login = function() {
+        retrieveAccountManagerURL();
+        // var loginRequest = {
+        //     accountName: document.login["accountName"].value,
+        //     password:  document.login["password"].value,
+        //     overwrite: false,
+        //     subscriptionKey: document.login["subscriptionKey"].value,
+        //     appId: "M4"
+        //   }; 
 
-        var loginRequest = {
-            accountName: document.login["accountName"].value,
-            password:  document.login["password"].value,
-            overwrite: false,
-            subscriptionKey: document.login["subscriptionKey"].value,
-            appId: "M4"
-          }; 
-
-        $.ajax({
-            url: composeURL("account-manager/login"),
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(loginRequest),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            success: function(data, textStatus, xhr) {
-                console.log("Successful call, textStatus: '" + textStatus + "'");
-                console.log(data);
-            },
-            error: function(xhr, textStatus, errorThrown){
-                console.log("Error on call, textStatus: '" + textStatus + "'\n errorThrown: '" + errorThrown + "'");
-            }
-        });
+        // var url = composeURL("account-manager/login");
+        // $.ajax({
+        //     url: composeURL("account-manager/login"),
+        //     type: 'POST',
+        //     dataType: 'json',
+        //     data: JSON.stringify(loginRequest),
+        //     headers: {
+        //         'Content-Type' : 'application/json'
+        //     },
+        //     success: function(data, textStatus, xhr) {
+        //         console.log("Successful call, textStatus: '" + textStatus + "'");
+        //         console.log(data);
+        //     },
+        //     error: function(xhr, textStatus, errorThrown){
+        //         console.log("Error on call, textStatus: '" + textStatus + "'\n errorThrown: '" + errorThrown + "'");
+        //     }
+        // });
 
         var current = {
             rootURL: document.login["rootURL"].value,
