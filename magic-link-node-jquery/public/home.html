@@ -16,10 +16,20 @@
                 text-align: end;
             }
 
+            #error p {
+                display: inline;
+                border: 1px solid black;
+                padding: 5px;
+                margin-right: 0;
+            }
+
+            #error button {
+                padding: 5px;
+            }
         </style>
 	</head>
 	<body>
-        <form name="login" id="login" onsubmit="client.login(); return false;">
+        <form name="login" id="login" onsubmit="home.login(); return false;">
 			<div>
 				<label for="rootURL">Connect to</label>
                 <span id="protocol">https://</span>
@@ -41,9 +51,13 @@
                 <button type="submit">Login</button>
             </div>
 		</form>
+        <div id="error" style="display:none">
+            <p id="errorMessage"></p>
+            <button onclick="$('#error').hide()">X</button>
+        </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" src="client.js"></script>		
+        <script type="text/javascript" src="home.js"></script>		
     </body>
 </html>        
     

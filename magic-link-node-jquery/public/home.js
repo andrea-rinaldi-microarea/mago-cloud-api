@@ -1,8 +1,8 @@
-var client = {
+var home = {
     login: function() {}
 };
 
-( client => {
+( home => {
 
     const CONNECTION_INFO_TAG = "connectionInfo";
 
@@ -16,22 +16,22 @@ var client = {
         document.login["rootURL"].value = "localhost:5000";
     }
 
-    client.login = function() {
+    home.login = function() {
 
         $.post("/login", {
                 rootURL: document.login["rootURL"].value,
                 accountName: document.login["accountName"].value,
                 password:  document.login["password"].value,
                 subscriptionKey: document.login["subscriptionKey"].value
-            }, 
-            function(error, result) {
-                if (error) {
-                    console.log(error);    
-                } else {
-                    console.log(result);
-                }
-            }
-        );
+            })
+            .done( result => {
+                console.log(result);
+            })
+            .fail( (xhr, status, error) => {
+                $("#errorMessage").text(xhr.responseJSON.message);
+                $("#error").show();
+                console.log(error);    
+            });
 
         // save info in local browser storage to propose next time
         var current = {
@@ -43,4 +43,4 @@ var client = {
         localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(current));
     }
 
-})(client);
+})(home);

@@ -24,7 +24,6 @@ class MagoAPIClient {
         this.appID = appID;
         this.accountManager = new AccountManager(this);
     }
-
 }
 
 module.exports = function magoAPIClient(gwamUrlOrInstanceName, producerID, appID) {
@@ -34,9 +33,9 @@ module.exports = function magoAPIClient(gwamUrlOrInstanceName, producerID, appID
 //==============================================================================
 
 //------------------------------------------------------------------------------
-async function retrieveServiceURL(gwamUrlOrInstanceName, subscription, service) {
-    // var url = `https://${this.gwamUrlOrInstanceName}/gwam_mapper/api/services/url/${subscription}/ACCOUNTMANAGER`;
-    var url = `https://${gwamUrlOrInstanceName}/gwam_mapper/api/snapshotcontainer/I-RELEASE?subscriptionKey=${subscription}`;
+function retrieveServiceURL(gwamUrlOrInstanceName, subscription, service) {
+    // var url = `https://${gwamUrlOrInstanceName}/gwam_mapper/api/services/url/${subscription}/ACCOUNTMANAGER`;
+    var url = `https://${gwamUrlOrInstanceName}/gwam_mapper/api/snapshotcontainer?subscriptionKey=${subscription}`;
     return new Promise((resolve, reject) => {
         axios.get(url)
             .then(response => {
@@ -46,7 +45,7 @@ async function retrieveServiceURL(gwamUrlOrInstanceName, subscription, service) 
                 reject({
                     status: error.response.status,
                     statusText: error.response.statusText,
-                    message: error.response.data.Message
+                    message: error.response.data.Message ? error.response.data.Message : error.response.data
                 });
                 
             });

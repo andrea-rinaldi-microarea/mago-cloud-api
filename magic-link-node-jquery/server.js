@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'home.html'));
  });
 
 var magoAPI = null;
@@ -23,7 +23,7 @@ app.post('/login', function (req, res) {
             res.send("success");
         })
         .catch(error => {
-            res.status(500).send("error");
+            res.status(error.status).send(error);
         });
 });
 
