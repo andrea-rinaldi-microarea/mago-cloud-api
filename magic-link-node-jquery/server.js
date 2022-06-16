@@ -17,10 +17,10 @@ var magoAPI = null;
 
 app.post('/login', function (req, res) {
     var data = req.body;
-    magoAPI = MagoAPI(data.rootURL, "MyProdKey", "MyAppId");
-    magoAPI.accountManager.login(data.accountName, data.password, data.subscriptionKey)
+    magoAPI = MagoAPI(data.gwamUrl, "MyProdKey", "MyAppKey");
+    magoAPI.login(data.accountName, data.password, data.subscriptionKey)
         .then( response => {
-            res.send("success");
+            res.send(response);
         })
         .catch(error => {
             res.status(error.status).send(error);
