@@ -1,0 +1,24 @@
+form {
+    display: inline-grid;
+}
+
+form div {
+    margin-top: 0.5rem;
+}
+
+form label {
+    width: 10rem;
+    display: inline-block;
+    text-align: end;
+}
+
+#error p {
+    display: inline;
+    border: 1px solid black;
+    padding: 5px;
+    margin-right: 0;
+}
+
+#error button {
+    padding: 5px;
+}
