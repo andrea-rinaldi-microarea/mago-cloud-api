@@ -7,15 +7,6 @@ class MagoAPIClient {
         this.appKey = appKey;
     }
 
-    #ProducerInfoHeader() {
-        return {
-            'Producer-Info': {
-                'ProducerKey':`${this.producerKey}`,  
-                'AppKey': `${this.appKey}`
-            }
-        }
-    }
-
     login(accountName, password, subscriptionKey) {
         var url = `https://${this.gwamUrl}/gwam_login/api/login`;
         var loginData = {
@@ -25,22 +16,41 @@ class MagoAPIClient {
             password: `${password}`,
             subscriptionKey: `${subscriptionKey}`
         }
-        var headers = {}
-        Object.assign(headers, this.#ProducerInfoHeader());
+        var headers = Object.assign({}, 
+            this.#ProducerInfoHeader()
+        );
         return new Promise((resolve, reject) => {
             axios.post(url, loginData, { headers: headers })
                 .then(response => {
                     resolve(response.data);
                 })
                 .catch(error => {
-                    reject({
-                        status: error.response.status,
-                        statusText: error.response.statusText,
-                        message: error.response.data.Message ? error.response.data.Message : error.response.data
-                    });
+                    if (error.response) {
+                        reject({
+                            status: error.response.status,
+                            statusText: error.response.statusText,
+                            message: error.response.data.Message ? error.response.data.Message : error.response.data
+                        });
+                    } else {
+                        reject({
+                            status: 400,
+                            statusText: error.code,
+                            message: error.message
+                        });
+                    }
                 });
         });
     }
+
+    #ProducerInfoHeader() {
+        return {
+            'Producer-Info': {
+                'ProducerKey':`${this.producerKey}`,  
+                'AppKey': `${this.appKey}`
+            }
+        }
+    }
+
 }
 
 module.exports = function magoAPIClient(gwamUrl, producerKey, appKey) {

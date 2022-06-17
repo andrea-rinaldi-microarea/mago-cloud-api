@@ -15,12 +15,16 @@ app.get('/', function (req, res) {
 
 var magoAPI = null;
 
-app.post('/login', function (req, res) {
+    app.post('/login', function (req, res) {
     var data = req.body;
     magoAPI = MagoAPI(data.gwamUrl, "MyProdKey", "MyAppKey");
     magoAPI.login(data.accountName, data.password, data.subscriptionKey)
         .then( response => {
-            res.send(response);
+            if (response.Result == true) {
+                res.send({ message: response.Message, jwtToken: response.JwtToken });
+            } else {
+                res.status(403).send({message: response.Message, jwtToken: ""})
+            }
         })
         .catch(error => {
             res.status(error.status).send(error);

@@ -5,6 +5,7 @@ var home = {
 ( home => {
 
     const CONNECTION_INFO_TAG = "connectionInfo";
+    var jwtToken = "";
 
     var current = JSON.parse(localStorage.getItem(CONNECTION_INFO_TAG));
     if (current) {
@@ -24,8 +25,9 @@ var home = {
                 password:  document.login["password"].value,
                 subscriptionKey: document.login["subscriptionKey"].value
             })
-            .done( result => {
-                console.log(result);
+            .done( response => {
+                console.log(response);
+                jwtToken = response.jwtToken;
             })
             .fail( (xhr, status, error) => {
                 $("#errorMessage").text(xhr.responseJSON.message);
