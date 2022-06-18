@@ -8,8 +8,9 @@
             <form name="login" id="login" onsubmit="home.login(); return false;">
                 <div>
                     <label for="gwamUrl">GWAM Url</label>
-                    <span id="protocol">https://</span>
+                    <span>https://</span>
                     <input type="text" id="gwamUrl" name="gwamUrl" required>
+                    <span>/</span>
                 </div>
                 <div>
                     <label for="accountName">Account Name</label>
@@ -28,9 +29,9 @@
                 </div>
             </form>
         </div>
-        <div id="logoutPanel" style="display:none">
+        <div id="logoffPanel" style="display:none">
             <p id="loginInfo"></p>
-            <button onclick="home.logout(); return false;">Logout</button>
+            <button onclick="home.logoff(); return false;">Logoff</button>
         </div>
         <div id="error" style="display:none">
             <p id="errorMessage"></p>

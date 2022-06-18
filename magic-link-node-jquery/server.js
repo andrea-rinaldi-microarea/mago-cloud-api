@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
 
 var magoAPI = null;
 
-    app.post('/login', function (req, res) {
+app.post('/login', function (req, res) {
     var data = req.body;
     magoAPI = MagoAPI(data.gwamUrl, "MyProdKey", "MyAppKey");
     magoAPI.login(data.accountName, data.password, data.subscriptionKey)
@@ -31,6 +31,25 @@ var magoAPI = null;
         });
 });
 
+app.post('/logoff', function (req, res) {
+    var data = req.body;
+    if (!magoAPI) {
+        res.status(500).send({message: "not logged in"});
+        return;
+    } 
+    magoAPI.logoff(data.token)
+        .then( response => {
+            if (response.Result == true) {
+                res.send({ message: response.Message });
+            } else {
+                res.status(500).send({message: response.Message})
+            }
+        })
+        .catch(error => {
+            res.status(error.status).send(error);
+        });
+});
+    
 
 const cmdArgs = process.argv.slice(2);
 var port = 5001;

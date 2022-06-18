@@ -8,19 +8,56 @@ class MagoAPIClient {
     }
 
     login(accountName, password, subscriptionKey) {
-        var url = `https://${this.gwamUrl}/gwam_login/api/login`;
-        var loginData = {
-            accountName: `${accountName}`,
-            appId: "MagoAPI",
-            overwrite: false,
-            password: `${password}`,
-            subscriptionKey: `${subscriptionKey}`
-        }
-        var headers = Object.assign({}, 
-            this.#ProducerInfoHeader()
+        return this.#Post(
+            `https://${this.gwamUrl}/gwam_login/api/login`,
+            {
+                accountName: `${accountName}`,
+                appId: "MagoAPI",
+                overwrite: false,
+                password: `${password}`,
+                subscriptionKey: `${subscriptionKey}`
+            },
+            Object.assign({}, 
+                this.#ProducerInfoHeader()
+            )
+        )
+    }
+
+    logoff(token) {
+        return this.#Post(
+            `https://${this.gwamUrl}/gwam_login/api/logoff`, 
+            {
+                token: token
+            },
+            Object.assign({}, 
+                this.#ProducerInfoHeader(),
+                this.#AuthorizationHeader(token)
+            )
         );
+    }
+
+    #ProducerInfoHeader() {
+        return {
+            'Producer-Info': JSON.stringify({
+                ProducerKey: this.producerKey,  
+                AppKey: this.appKey
+            })
+        }
+    }
+
+    #AuthorizationHeader(token) {
+        return {
+            'Authorization': JSON.stringify({
+                type: 'jwt', 
+                appId: 'MagoAPI', 
+                securityValue: token
+            })
+        }
+    }
+
+    #Post(url, data, headers) {
         return new Promise((resolve, reject) => {
-            axios.post(url, loginData, { headers: headers })
+            axios.post(url, data, { headers: headers })
                 .then(response => {
                     resolve(response.data);
                 })
@@ -40,15 +77,6 @@ class MagoAPIClient {
                     }
                 });
         });
-    }
-
-    #ProducerInfoHeader() {
-        return {
-            'Producer-Info': {
-                'ProducerKey':`${this.producerKey}`,  
-                'AppKey': `${this.appKey}`
-            }
-        }
     }
 
 }

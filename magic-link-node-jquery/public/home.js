@@ -10,13 +10,13 @@ var home = {
     
         if (token) {
             $('#loginPanel').hide();
-            $('#logoutPanel').show();
+            $('#logoffPanel').show();
             if (current) {
                 $("#loginInfo").text(`Logged in as ${current.accountName} on ${current.subscriptionKey}`);
             }
         } else {
             $('#loginPanel').show();
-            $('#logoutPanel').hide();
+            $('#logoffPanel').hide();
             if (current) {
                 document.login["gwamUrl"].value = current.gwamUrl;
                 document.login["accountName"].value = current.accountName;
@@ -58,9 +58,20 @@ var home = {
         localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(current));
     }
 
-    home.logout = function() {
-        localStorage.removeItem(TOKEN_TAG);
-        init();
+    home.logoff = function() {
+        $.post("/logoff", {
+            token: localStorage.getItem(TOKEN_TAG)
+        })
+        .done( response => {
+            localStorage.removeItem(TOKEN_TAG);
+            init();
+        })
+        .fail( (xhr, status, error) => {
+            $("#errorMessage").text(xhr.responseJSON.message);
+            $("#error").show();
+            console.log(error);    
+            localStorage.removeItem(TOKEN_TAG);
+        });
     }
 
 })(home);
