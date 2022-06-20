@@ -32,15 +32,34 @@ app.post('/login', function (req, res) {
 });
 
 app.post('/logoff', function (req, res) {
-    var data = req.body;
     if (!magoAPI) {
         res.status(500).send({message: "not logged in"});
         return;
     } 
+    var data = req.body;
     magoAPI.logoff(data.token)
         .then( response => {
             if (response.Result == true) {
                 res.send({ message: response.Message });
+            } else {
+                res.status(500).send({message: response.Message})
+            }
+        })
+        .catch(error => {
+            res.status(error.status).send(error);
+        });
+});
+
+app.post('/getContacts', function (req, res) {
+    if (!magoAPI) {
+        res.status(500).send({message: "not logged in"});
+        return;
+    } 
+    var data = req.body;
+    magoAPI.tbServer.GetXmlData(data.token, data.userName, data.subscriptionKey, data.params)
+        .then( response => {
+            if (response.success == true) {
+                res.send(response);
             } else {
                 res.status(500).send({message: response.Message})
             }

@@ -1,5 +1,6 @@
 var home = {
-    login: function() {}
+    login: function() {},
+    logoff: function() {}
 };
 
 ( home => {
@@ -30,7 +31,6 @@ var home = {
     init();
 
     home.login = function() {
-
         $.post("/login", {
                 gwamUrl: document.login["gwamUrl"].value,
                 accountName: document.login["accountName"].value,

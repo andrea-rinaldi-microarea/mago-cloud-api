@@ -4,12 +4,12 @@
         <link rel="stylesheet" href="global.css">
 	</head>
 	<body>
-        <a href="home.html">&lt; Back</a>
-        
-        <div style="margin-top:2em">
-            <a href="get-contacts.html">Get Contacts</a>
+        <a href="menu.html">&lt; Back</a>
+        <div>
+            <button onclick="getContacts.onGetContacts();">Get Contacts</button>
         </div>
 
+        
         <div id="error" style="display:none">
             <p id="errorMessage"></p>
             <button onclick="$('#error').hide()">X</button>
@@ -17,7 +17,7 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script type="text/javascript" src="globals.js"></script>		
-        <script type="text/javascript" src="menu.js"></script>		
+        <script type="text/javascript" src="get-contacts.js"></script>		
     </body>
 </html>        
     
