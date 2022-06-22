@@ -12,7 +12,7 @@ var getContacts = {
     }
 
     getContacts.onGetContacts = function() {
-        const profileName = "pippo";
+        const profileName = "DefaultLight";
         const profileType = "Standard";
         $.post("/getContacts", {
             token: token,

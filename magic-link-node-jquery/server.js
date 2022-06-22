@@ -59,7 +59,11 @@ app.post('/getContacts', function (req, res) {
     magoAPI.tbServer.GetXmlData(data.token, data.userName, data.subscriptionKey, data.params)
         .then( response => {
             if (response.success == true) {
-                res.send(response);
+                if (response.retVal == true) {
+                    res.send(response);
+                } else {
+                    res.status(500).send({message: response.result[0]})    
+                }
             } else {
                 res.status(500).send({message: response.Message})
             }

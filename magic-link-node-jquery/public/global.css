@@ -12,13 +12,19 @@ form label {
     text-align: end;
 }
 
-#error p {
+#error {
     display: inline;
+}
+
+#error div {
+    display: inline-block;
     border: 1px solid black;
     padding: 5px;
     margin-right: 0;
+    width: 30%;
 }
 
 #error button {
     padding: 5px;
+    position: absolute;
 }
