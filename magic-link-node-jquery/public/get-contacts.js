@@ -26,6 +26,11 @@ var getContacts = {
         })
         .done( response => {
             console.log(response);
+            var xmls = "";
+            response.result.forEach(record => {
+                xmls += record + "\n";
+            });
+            $("#result").text(xmls);
         })
         .fail( (xhr, status, error) => {
             $("#errorMessage").text(xhr.responseJSON.message);
