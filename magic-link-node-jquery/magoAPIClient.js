@@ -75,8 +75,7 @@ class MagoAPIClient {
     SnapshotHeader(subscriptionKey) {
         return {
             'Snapshot': JSON.stringify({
-                SubscriptionKey: subscriptionKey, 
-                Token: ""
+                SubscriptionKey: subscriptionKey
             })
         }
     }
@@ -120,8 +119,7 @@ class TBServer {
                     args: {
                         param: Buffer.from(params).toString('base64'),
                         useApproximation: true,
-                        loginName: userName,
-                        result: "data"
+                        loginName: userName
                     }
                 },
                 Object.assign({}, 
