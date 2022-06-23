@@ -28,3 +28,11 @@ form label {
     padding: 5px;
     position: absolute;
 }
+
+#mainMenu {
+    margin-top:2em
+}
+
+#mainMenu a {
+    display: block;
+}
