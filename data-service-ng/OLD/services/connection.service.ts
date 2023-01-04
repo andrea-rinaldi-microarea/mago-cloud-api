@@ -12,14 +12,12 @@ const CONNECTION_INFO_TAG = "connectionInfo";
 export class ConnectionService {
   public current: ConnectionInfo;
 
-  constructor(private http: HttpClient) {
-    var currConnInfo = localStorage.getItem(CONNECTION_INFO_TAG);
-    if (currConnInfo != null) {
-      this.current = JSON.parse(currConnInfo);
-      this.current.jwtToken = null; // should not be stored, but just in case
-    }
-    else
+  constructor(private http: HttpClient) { 
+    this.current = JSON.parse(localStorage.getItem(CONNECTION_INFO_TAG));
+    if (!this.current) 
       this.current = new ConnectionInfo();
+    else
+      this.current.jwtToken = null; // should not be stored, but just in case
   }
 
   composeURL(path: string): string {
@@ -39,24 +37,20 @@ export class ConnectionService {
         subscriptionKey: this.current.subscriptionKey,
         appId: "M4"
       };
-
-      this.http.post(this.composeURL("account-manager/login"), loginRequest).subscribe({
-        next: (value: Object) => {
-          var data = value as LoginResponse;
-          if (data.JwtToken == "" || data.SubscriptionKey == "") { // some login error, i.e.: bad subscription
-            observer.error(`Login failed: ${data.Message}`);
-          } else {
-            localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
-            this.current.jwtToken = data.JwtToken;
-            observer.next();
-            observer.complete();
-          }
-        },
-        error: (error) => {
-          observer.error(`${error.status} - ${error.error} - ${error.message}`);
+      this.http.post(this.composeURL("account-manager/login"), loginRequest).subscribe((data:LoginResponse) => {
+        if (data.JwtToken == "" || data.SubscriptionKey == "") { // some login error, i.e.: bad subscription
+          observer.error(`Login failed: ${data.Message}`);
+        } else {
+          localStorage.setItem(CONNECTION_INFO_TAG, JSON.stringify(this.current));
+          this.current.jwtToken = data.JwtToken;
+          observer.next();
+          observer.complete();        
         }
+      },
+      (error) => {
+        observer.error(`${error.status} - ${error.error} - ${error.message}`);
       });
-    })
+    }) 
     return $login;
   }
 
@@ -69,7 +63,7 @@ export class ConnectionService {
       this.http.post(this.composeURL("account-manager/logoff"), { }, { headers: headers }).subscribe((data:any) => {
         this.current.jwtToken = null;
         observer.next();
-        observer.complete();
+        observer.complete(); 
       });
     });
     return $logout;

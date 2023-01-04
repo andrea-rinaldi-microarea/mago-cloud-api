@@ -1,11 +1,11 @@
 export class ConnectionInfo {
-    constructor(
-    ) {}
+  constructor(
+  ) {}
 
-    public accountName: string;
-    public password: string;
-    public subscriptionKey: string;
-    public jwtToken: string = null;
-    public rootURL: string = "release-v112.mago.cloud";
-    public isDebugEnv: boolean;
+  public accountName: string = "";
+  public password: string = "";
+  public subscriptionKey: string = "";
+  public jwtToken: string | null = null;
+  public rootURL: string = "release-v112.mago.cloud";
+  public isDebugEnv: boolean = false;
 }
