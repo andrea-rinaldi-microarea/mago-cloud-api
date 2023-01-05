@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+      <a routerLink="/menu">&lt; Back</a>
+  </div>
+  <div class="row">
+      <form>
+          <div class="form-group col-12 mt-4">
+              <button (click)="onList()" class="btn btn-primary">List Contacts</button>
+          </div>
+      </form>
+  </div>
+  <div class="row">
+      <ul >
+          <li *ngFor="let contact of contacts">{{contact["MA_Contacts.CompanyName"]}}</li>
+      </ul>
+  </div>
+</div>

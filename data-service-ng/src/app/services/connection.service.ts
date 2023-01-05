@@ -40,9 +40,8 @@ export class ConnectionService {
         appId: "M4"
       };
 
-      this.http.post(this.composeURL("account-manager/login"), loginRequest).subscribe({
-        next: (value: Object) => {
-          var data = value as LoginResponse;
+      this.http.post<LoginResponse>(this.composeURL("account-manager/login"), loginRequest).subscribe({
+        next: (data) => {
           if (data.JwtToken == "" || data.SubscriptionKey == "") { // some login error, i.e.: bad subscription
             observer.error(`Login failed: ${data.Message}`);
           } else {

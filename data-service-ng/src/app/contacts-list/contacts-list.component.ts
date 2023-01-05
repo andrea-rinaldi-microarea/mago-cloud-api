@@ -29,11 +29,13 @@ export class ContactsListComponent implements OnInit {
           Type:"JWT",
           SecurityValue: this.connection.current.jwtToken
     }));
-    this.http.get(this.connection.composeURL("data-service/getdata/ERP.Contacts.Dbl.ContactsByType/code"), { headers }).subscribe( (data:any) => {
-      this.contacts = data.rows;
-    },
-    (error: any) => {
-      console.log(error);
+    this.http.get(this.connection.composeURL("data-service/getdata/ERP.Contacts.Dbl.ContactsByType/code"), { headers }).subscribe({
+      next: (data:any) => {
+        this.contacts = data.rows;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
     });
   }
 }

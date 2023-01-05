@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+      <a routerLink="/menu">&lt; Back</a>
+  </div>
+  <div class="row">
+      <form class="form-inline">
+          <div class="form-group">
+              <label for="filter">Filter</label>
+              <input type="text" class="form-control ml-2" name="filter" id="filter" [(ngModel)]="filter">
+          </div>
+          <button (click)="onList()" class="btn btn-primary ml-2">List Items</button>
+      </form>
+  </div>
+  <div class="row" *ngIf="columns.length > 0">
+      <table class="table table-sm">
+          <tr>
+              <th *ngFor="let column of columns">
+                  {{column.title}}
+              </th>
+          </tr>
+          <tr *ngFor="let item of items">
+              <td *ngFor="let column of columns">
+                  {{item[column.id]}}
+              </td>
+          </tr>
+      </table>
+  </div>
+</div>

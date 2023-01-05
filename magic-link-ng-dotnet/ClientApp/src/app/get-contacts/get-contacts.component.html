@@ -7,11 +7,11 @@
             <div class="form-group col-5">
                 <label for="profileName">Profile</label>
                 <input type="text" class="form-control" name="profileName" id="profileName" [(ngModel)]="profileName">
-            </div>        
+            </div>
             <div class="form-group col-5" >
                 <label for="profileType">Type</label>
                 <input type="text" class="form-control" name="profileType" id="profileType" [(ngModel)]="profileType">
-            </div>     
+            </div>
         </form>
     </div>
     <div class="row mt-2">
@@ -26,8 +26,7 @@
     </div>
     <div *ngIf="alertMessage" class="alert alert-danger alert-dismissible" role="alert">
         {{alertMessage}}
-        <button type="button" class="close" data-dismiss="alert" (click)="alertMessage = null" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn-close" data-dismiss="alert" (click)="alertMessage = null" aria-label="Close">
         </button>
     </div>
 </div>

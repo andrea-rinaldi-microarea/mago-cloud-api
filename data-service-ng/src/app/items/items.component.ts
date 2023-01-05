@@ -3,6 +3,11 @@ import { ConnectionService } from '../services/connection.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+export interface ItemColumn {
+  id: string;
+  title: string;
+}
+
 @Component({
   selector: 'app-items',
   templateUrl: './items.component.html',
@@ -10,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class ItemsComponent implements OnInit {
 
-  public columns = [];
+  public columns : ItemColumn[] = [];
   public items = [];
   public filter = "";
 
@@ -31,16 +36,18 @@ export class ItemsComponent implements OnInit {
           Type:"JWT",
           SecurityValue: this.connection.current.jwtToken
     }));
-    var params = null;
+    var params : HttpParams | undefined;
     if (this.filter != "") {
       params = new HttpParams().set("filter", this.filter);
     }
-    this.http.get(this.connection.composeURL("data-service/getdata/ERP.Items.Dbl.Items/default"), { headers, params }).subscribe( (data:any) => {
-      this.columns = data.columns;
-      this.items = data.rows;
-    },
-    (error: any) => {
-      console.log(error);
+    this.http.get(this.connection.composeURL("data-service/getdata/ERP.Items.Dbl.Items/default"), { headers, params }).subscribe({
+      next: (data:any) => {
+        this.columns = data.columns;
+        this.items = data.rows;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
     });
   }
 }
