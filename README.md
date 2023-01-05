@@ -1,3 +1,10 @@
+# ABANDONED BRANCH
+This branch contains some abandoned subprojects:
+* data-service-ng
+* magic-link-jquery
+* magic-link-ng
+They were abandoned due to the CORS limitation: it is not possible to use the MagoCloud APIs from a browser-only application, a server side is required 
+
 # mago-cloud-api
 Samples about using the MagoCloud API
 
