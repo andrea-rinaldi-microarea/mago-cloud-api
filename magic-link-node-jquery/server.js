@@ -82,8 +82,8 @@ if (cmdArgs.length == 1) {
 
 
  var server = app.listen(port, "localhost", function () {
-    var host = server.address().address
-    var port = server.address().port
+    var host = "localhost"; // server.address().address; it looks like is not working anymore, address is always ::1
+    var port = server.address().port;
     
     console.log(`MagicLink sample listening at http://${host}:${port}`);
     opn(`http://${host}:${port}`);

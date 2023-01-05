@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
+            "name": "magic-link-node-jquery",
             "program": "${workspaceFolder}/magic-link-node-jquery/server.js",
             "request": "launch",
             "skipFiles": [

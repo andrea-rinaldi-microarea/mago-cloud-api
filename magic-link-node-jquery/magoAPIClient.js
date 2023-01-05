@@ -88,7 +88,7 @@ class MagoAPIClient {
                 gmtOffset: -60,
                 date: {
                     day: date.getDate(),
-                    month: date.getMonth(),
+                    month: date.getMonth() + 1,
                     year: date.getFullYear()
                 }
             })
@@ -130,7 +130,11 @@ class TBServer {
                 ))
                 .then( response => {
                     if (response.Result == false) {
-                        reject(response);
+                        reject({
+                                status: 500,
+                                statusText: '',
+                                message:response.Message
+                        });
                     } else {
                         if (Array.isArray(response.result)) {
                             var resultB64 = response.result;
