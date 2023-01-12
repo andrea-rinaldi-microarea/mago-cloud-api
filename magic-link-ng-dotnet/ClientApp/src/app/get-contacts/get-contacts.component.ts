@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class GetContactsComponent implements OnInit {
 
-  public alertMessage: string  = null;
+  public alertMessage: string | null  = null;
   public profileName: string = "DefaultLight";
   public profileType: string = "Standard";
   public extractedData: string = "";
@@ -33,14 +33,18 @@ export class GetContactsComponent implements OnInit {
         </maxs:Parameters>
     </maxs:Contacts>`;
       this.extractedData = "";
-      this.connection.getData(xmlParams).subscribe((result: string[]) => {
+      this.connection.getData(xmlParams).subscribe({
+        next: (result: string[]) => {
         result.forEach(record => {
           this.extractedData += record + "\n\r";
       })
     },
-    (error) => {
+    error : (error) => {
       this.alertMessage = error;
-    });
+    }
+  });
+
   }
+
 
 }
