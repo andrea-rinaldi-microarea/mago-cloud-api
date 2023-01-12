@@ -1,10 +1,9 @@
-import { GetContactsComponent } from './get-contacts/get-contacts.component';
-import { PostContactComponent } from './post-contact/post-contact.component';
-import { MenuComponent } from './menu/menu.component';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { GetContactsComponent } from './get-contacts/get-contacts.component';
 import { LoginComponent } from './login/login.component';
-
+import { MenuComponent } from './menu/menu.component';
+import { PostContactComponent } from './post-contact/post-contact.component';
 
 const routes: Routes = [
   {
@@ -28,6 +27,7 @@ const routes: Routes = [
     component: PostContactComponent,
   }
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

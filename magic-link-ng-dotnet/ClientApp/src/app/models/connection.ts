@@ -1,38 +1,35 @@
 export class ConnectionInfo {
-    constructor(
-    ) {}
+  constructor(
+  ) {}
 
-    public accountName: string;
-    public password: string;
-    public subscriptionKey: string;
-    public jwtToken: string = null;
-    public rootURL: string = "public.mago.cloud";
-    public ui_culture: string;
-    public culture: string;
-    public isDebugEnv: boolean;
+  public accountName: string = "";
+  public password: string = "";
+  public subscriptionKey: string = "";
+  public jwtToken: string | null = null;
+  public rootURL: string = "public.mago.cloud";
+  public ui_culture: string = "";
+  public culture: string = "";
+  public isDebugEnv: boolean = false;
 }
 
 export class LoginRequest {
-    public url: string;
-    public accountName: string;
-    public password: string;
-    public subscriptionKey: string;
+  public url: string = "";
+  public accountName: string = "";
+  public password: string = "";
+  public subscriptionKey: string = "";
 }
 
-export class TbUserData {
-    constructor(
-    ) {}
-
-    public token: string;
-    public userName: string;
-    public password: string;
-    public subscriptionKey: string;
-    public isLogged: boolean;
+export interface TbUserData {
+  token: string | null;
+  userName: string;
+  password: string;
+  subscriptionKey: string;
+  isLogged: boolean;
 }
 
-export class SetDataResponse {
-    public xmlData: string;
-    public warnings: string;
+export interface SetDataResponse {
+  xmlData: string;
+  warnings: string;
 }
 
 

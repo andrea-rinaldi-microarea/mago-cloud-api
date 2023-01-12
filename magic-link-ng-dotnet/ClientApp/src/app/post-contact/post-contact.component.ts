@@ -10,14 +10,14 @@ import { ConnectionService } from '../services/connection.service';
 })
 export class PostContactComponent implements OnInit {
 
-  public alertMessage: string  = null;
+  public alertMessage: string | null  = null;
   public profileName: string = "DefaultLight";
   public profileType: string = "Standard";
-  public contactName: string;
-  public company: string;
-  public address: string;
-  public phone: string;
-  public postbackData: string;
+  public contactName: string = "";
+  public company: string = "";
+  public address: string = "";
+  public phone: string = "";
+  public postbackData: string = "";
 
   constructor(
     public connection: ConnectionService,
@@ -43,11 +43,13 @@ export class PostContactComponent implements OnInit {
         </maxs:Contacts>
       </maxs:Data>
     </maxs:Contacts>`;
-    this.connection.setData(xmlData).subscribe((result: SetDataResponse) => {
-      this.postbackData = result.xmlData;
-    },
-    (error) => {
-      this.alertMessage = error;
+    this.connection.setData(xmlData).subscribe({
+      next: (result: SetDataResponse) => {
+        this.postbackData = result.xmlData;
+      },
+      error: (error) => {
+        this.alertMessage = error;
+      }
     });
 
   }

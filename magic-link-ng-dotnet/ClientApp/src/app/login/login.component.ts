@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  public alertMessage: string  = null;
+  public alertMessage: string | null  = null;
 
   constructor(
     public connection: ConnectionService,
@@ -34,5 +34,8 @@ export class LoginComponent implements OnInit {
     (error) => {
       this.alertMessage = error;
     });
+  }
+  onCancel() {
+
   }
 }
