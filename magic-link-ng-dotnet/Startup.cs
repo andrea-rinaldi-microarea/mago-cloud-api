@@ -1,5 +1,4 @@
 using magic_link_ng_dotnet.Models;
-using Microarea.Tbf.Model.API;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

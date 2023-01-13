@@ -19,7 +19,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/magic-link-ng-dotnet/bin/Debug/netcoreapp3.1/magic-link-ng-dotnet.dll",
+            "program": "${workspaceFolder}/magic-link-ng-dotnet/bin/Debug/net6/magic-link-ng-dotnet.dll",
             "args": [],
             "cwd": "${workspaceFolder}/magic-link-ng-dotnet",
             "stopAtEntry": false,

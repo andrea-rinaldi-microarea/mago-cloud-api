@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
@@ -14,7 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microarea.Tbf.Model.Library" Version="1.8.0.3" />
+    <PackageReference Include="Microarea.Tbf.Model" Version="2.0.0.*" />
+    <!-- <PackageReference Include="Microarea.Tbf.Model.Library" Version="1.8.0.3" /> -->
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5" />
   </ItemGroup>
 
