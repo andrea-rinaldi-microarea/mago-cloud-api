@@ -36,7 +36,7 @@ namespace magic_link_ng_dotnet.Controllers
             {
                 _magoAPI.Client = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
 
-                IAccountManagerResult result = await _magoAPI.Client.AccountManager?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
+                IGwamResult result = await _magoAPI.Client.GwamClient?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
 
                 if (!result.Success || result.UserData == null || !result.UserData.IsLogged)
                 {
@@ -47,6 +47,7 @@ namespace magic_link_ng_dotnet.Controllers
                 }
 
                 return (TbUserData)result.UserData;
+
             }
             catch (System.Exception e)
             {
