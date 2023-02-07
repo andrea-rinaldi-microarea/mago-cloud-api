@@ -1,2 +1,7 @@
-<h1>Welcome!</h1>
-<p>Please shop online with us</p>
+<div *ngIf="connection.current.jwtToken">
+  <h1>Welcome!</h1>
+  <p>Please shop online with us</p>
+</div>
+<div *ngIf="!connection.current.jwtToken">
+  <p>The store is currently under maintenance, please return later</p>
+</div>

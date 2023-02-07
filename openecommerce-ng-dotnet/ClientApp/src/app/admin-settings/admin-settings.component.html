@@ -16,33 +16,43 @@
       </form>
   </div>
   <div *ngIf="authenticated">
-    <form>
-      <h2>Settings</h2>
-      <div class="form-group col-6 mt-3">
-          <label for="rootURL">MagoCloud URL</label>
-          <div class="input-group">
-              <div class="input-group-prepend">
-                  <span class="input-group-text">https://</span>
-              </div>
-              <input type="text" class="form-control" name="rootURL" id="rootURL" [(ngModel)]="connection.current.rootURL">
-          </div>
-      </div>
-      <div class="form-group col-6 mt-3">
-          <label for="accountName">Account Name</label>
-          <input type="text" class="form-control" name="accountName" id="accountName" [(ngModel)]="connection.current.accountName">
-      </div>
-      <div class="form-group col-6" >
-          <label for="password">Password</label>
-          <input type="password" class="form-control" name="password" id="password" [(ngModel)]="connection.current.password">
-      </div>
-      <div class="form-group col-6" >
-          <label for="subscriptionKey">Subscription Key</label>
-          <input type="text" class="form-control" name="subscriptionKey" id="subscriptionKey" [(ngModel)]="connection.current.subscriptionKey">
-      </div>
-      <div class="form-group col-12 mt-4">
-        <button (click)="onTest()" class="btn btn-secondary">Test</button>
+    <div *ngIf="!connection.current.jwtToken">
+      <form>
+        <h2>Settings</h2>
+        <div class="form-group col-6 mt-3">
+            <label for="rootURL">MagoCloud URL</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">https://</span>
+                </div>
+                <input type="text" class="form-control" name="rootURL" id="rootURL" [(ngModel)]="connection.current.rootURL">
+            </div>
+        </div>
+        <div class="form-group col-6 mt-3">
+            <label for="accountName">Account Name</label>
+            <input type="text" class="form-control" name="accountName" id="accountName" [(ngModel)]="connection.current.accountName">
+        </div>
+        <div class="form-group col-6" >
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password" [(ngModel)]="connection.current.password">
+        </div>
+        <div class="form-group col-6" >
+            <label for="subscriptionKey">Subscription Key</label>
+            <input type="text" class="form-control" name="subscriptionKey" id="subscriptionKey" [(ngModel)]="connection.current.subscriptionKey">
+        </div>
+        <div class="form-group col-12 mt-4">
+          <button (click)="onConnect()" class="btn btn-secondary">Connect</button>
+        </div>
+      </form>
     </div>
-</form>
+    <div *ngIf="connection.current.jwtToken">
+        <div class="row">
+            Connected to {{connection.current.subscriptionKey}} as {{connection.current.accountName}}
+            <div class="form-group col-12 mt-4">
+                <button (click)="onDisconnect()" class="btn btn-primary">Disconnect</button>
+            </div>
+        </div>
+    </div>
   </div>
   <div *ngIf="alertMessage" [ngClass]="['alert', 'alert-dismissible', 'mt-4', alertType]" role="alert">
       {{alertMessage}}

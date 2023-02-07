@@ -35,7 +35,7 @@ export class AdminSettingsComponent implements OnInit {
   onCancel() {
   }
 
-  onTest() {
+  onConnect() {
     this.connection.login().subscribe({
       next: () => {
         this.alertType = 'alert-success';
@@ -46,5 +46,16 @@ export class AdminSettingsComponent implements OnInit {
         this.alertMessage = error;
       }
     })
+  }
+
+  onDisconnect() {
+    this.connection.logout().subscribe({
+      next: () => {
+
+      },
+      error: (error) => {
+        this.alertMessage = error;
+      }
+    });
   }
 }
