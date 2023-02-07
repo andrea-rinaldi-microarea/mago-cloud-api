@@ -26,7 +26,7 @@ namespace magic_link_ng_dotnet.Models
         public string warnings {get; set;}
     }
 
-    public class MagoAPIClientWrapper {
+    public class MagoAPIClientWrapper  {
         public MagoAPIClient Client = null;
     }
 

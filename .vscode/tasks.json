@@ -2,12 +2,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build-magic-link-ng-dotnet",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/magic-link-ng-dotnet/magic-link-ng-dotnet.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-openecommerce-ng-dotnet",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/openecommerce-ng-dotnet/openecommerce-ng-dotnet.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -37,6 +49,15 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "path": "openecommerce-ng-dotnet/ClientApp",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build - openecommerce-ng-dotnet/ClientApp",
+            "detail": "ng build"
         }
     ]
 }
