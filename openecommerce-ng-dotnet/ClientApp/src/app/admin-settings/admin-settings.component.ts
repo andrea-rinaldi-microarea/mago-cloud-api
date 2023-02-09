@@ -54,6 +54,7 @@ export class AdminSettingsComponent implements OnInit {
 
       },
       error: (error) => {
+        this.alertType = 'alert-danger';
         this.alertMessage = error;
       }
     });

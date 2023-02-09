@@ -11,28 +11,21 @@ namespace openecommerce_ng_dotnet.Models
         public string? appId {get; set;}
     }
 
-    public class GetDataRequest {
-        public string? xmlParams {get; set;}
-        public TbUserDataWrapper? userData {get; set;}
-    }
-
-    public class SetDataRequest {
-        public string? xmlData {get; set;}
-        public TbUserDataWrapper? userData {get; set;}
-    }
-
     public class SetDataResponse {
         public string? xmlData {get; set;}
         public string? warnings {get; set;}
     }
 
-    public interface IMagoAPIClientWrapper {
-        public MagoAPIClient? Client {get; set; }
+    public interface IMagoConnection {
+        public MagoAPIClient? APIClient {get; set; }
+        public TbUserData? TbUserData {get; set; }
     }
 
-    public class MagoAPIClientWrapper : IMagoAPIClientWrapper {
-        public MagoAPIClient? _client = null;
-        public MagoAPIClient? Client {get { return _client; }  set { _client = value; } }
+    public class MagoConnection : IMagoConnection {
+        public MagoAPIClient? _APIclient = null;
+        public TbUserData? _TbUserData = null;
+        public MagoAPIClient? APIClient {get { return _APIclient; }  set { _APIclient = value; } }
+        public TbUserData? TbUserData {get { return _TbUserData; } set{ _TbUserData = value; } }
     }
 
     public class TbUserDataWrapper : TbUserData

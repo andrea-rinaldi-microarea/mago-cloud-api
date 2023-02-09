@@ -62,13 +62,15 @@ export class ConnectionService {
         subscriptionKey: this.current.subscriptionKey,
         isLogged: true
       }
-      this.http.post(this.baseUrl + "connection/logout", data).subscribe((data:any) => {
-        this.current.jwtToken = null;
-        observer.next();
-        observer.complete();
-      },
-      (error) => {
-        observer.error(`${error.status} - ${error.error} - ${error.message}`);
+      this.http.post(this.baseUrl + "connection/logout", data).subscribe({
+        next: (data:any) => {
+          this.current.jwtToken = null;
+          observer.next();
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(`${error.status} - ${error.error} - ${error.message}`);
+        }
       });
     });
     return $logout;

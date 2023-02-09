@@ -7,6 +7,7 @@ const PROXY_CONFIG = [
   {
     context: [
       "/connection",
+      "/catalog"
    ],
     target: target,
     secure: false,

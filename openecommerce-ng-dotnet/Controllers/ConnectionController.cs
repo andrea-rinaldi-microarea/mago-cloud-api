@@ -21,11 +21,11 @@ namespace openecommerce_ng_dotnet.Controllers;
 [Route("[controller]")]
 public class ConnectionController : ControllerBase
 {
-    private IMagoAPIClientWrapper _magoAPI;
+    private IMagoConnection magoConnection;
 
-    public ConnectionController(IMagoAPIClientWrapper magoAPI)
+    public ConnectionController(IMagoConnection m)
     {
-        _magoAPI = magoAPI;
+        magoConnection = m;
     }
 
     [HttpPost("login")]
@@ -33,9 +33,9 @@ public class ConnectionController : ControllerBase
     {
         try
         {
-            _magoAPI.Client = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
+            magoConnection.APIClient = new MagoAPIClient(loginRequest.url, new ProducerInfo("MyProdKey", "MyAppId"));
 
-            IGwamResult result = await _magoAPI?.Client?.GwamClient?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
+            IGwamResult result = await magoConnection?.APIClient?.GwamClient?.Login(loginRequest.accountName, loginRequest.password, loginRequest.subscriptionKey);
 
             if (!result.Success || result.UserData == null || !result.UserData.IsLogged)
             {
@@ -45,7 +45,8 @@ public class ConnectionController : ControllerBase
                 };
             }
 
-            return (TbUserData)result.UserData;
+            magoConnection.TbUserData = (TbUserData)result.UserData;
+            return magoConnection.TbUserData;
 
         }
         catch (System.Exception e)
@@ -60,7 +61,7 @@ public class ConnectionController : ControllerBase
     [HttpPost("logout")]
     public async Task<ActionResult<bool>> Logout([FromBody] TbUserDataWrapper userData)
     {
-        if (_magoAPI.Client == null)
+        if (magoConnection.APIClient == null)
         {
             return new ContentResult {
                 StatusCode = 500,
@@ -69,13 +70,14 @@ public class ConnectionController : ControllerBase
         }
         try
         {
-            IAccountManagerResult isValid = await _magoAPI.Client.AccountManager.IsValid(userData.Token, userData.SubscriptionKey);
+            IAccountManagerResult isValid = await magoConnection.APIClient.AccountManager.IsValid(userData.Token, userData.SubscriptionKey);
             if (isValid.Success)
             {
-                IAccountManagerResult result = await _magoAPI.Client.AccountManager.Logout(userData.Token, userData.SubscriptionKey);
+                IAccountManagerResult result = await magoConnection.APIClient.AccountManager.Logout(userData.Token, userData.SubscriptionKey);
                 if (result.Success)
                 {
-                    _magoAPI.Client = null;
+                    magoConnection.APIClient = null;
+                    magoConnection.TbUserData = null;
                     return true;
                 }
                 else
@@ -102,4 +104,5 @@ public class ConnectionController : ControllerBase
             };
         }
     }
+
 }

@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { ConnectionService } from './services/connection.service';
+import { CatalogService } from './services/catalog.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { ConnectionService } from './services/connection.service';
       { path: 'admin-settings', component: AdminSettingsComponent },
     ])
   ],
-  providers: [ConnectionService],
+  providers: [ConnectionService, CatalogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IMagoAPIClientWrapper, MagoAPIClientWrapper>();
+builder.Services.AddSingleton<IMagoConnection, MagoConnection>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
