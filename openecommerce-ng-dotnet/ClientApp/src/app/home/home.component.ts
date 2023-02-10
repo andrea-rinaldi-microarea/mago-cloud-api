@@ -10,9 +10,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public connection: ConnectionService,
     public catalog: CatalogService
-    ) {
-
-  }
+    ) {}
 
   ngOnInit() {
     if (this.connection.current.jwtToken) {

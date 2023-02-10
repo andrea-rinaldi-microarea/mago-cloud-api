@@ -12,6 +12,25 @@ export class CatalogService {
 
   }
 
+  synchronizeCatalog(): Observable<boolean> {
+    var $synchronizeCatalog = new Observable<boolean> ( observer => {
+
+      var catalogRequest = new CatalogRequest();
+      catalogRequest.filter = "02";
+
+      this.http.post<boolean>(this.baseUrl + "catalog/synchronizeCatalog", catalogRequest).subscribe({
+        next: (success: boolean) => {
+          observer.next(success);
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(`${error.status} - ${error.error} - ${error.message}`);
+        }
+      });
+    });
+    return $synchronizeCatalog;
+  }
+
   getCatalog(): Observable<Object> {
     var $getCatalog = new Observable<Object> ( observer => {
 

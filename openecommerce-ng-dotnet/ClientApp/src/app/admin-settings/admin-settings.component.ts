@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CatalogService } from '../services/catalog.service';
 import { ConnectionService } from '../services/connection.service';
 
 @Component({
@@ -16,7 +17,10 @@ export class AdminSettingsComponent implements OnInit {
 
   public alertType:  string = 'alert-danger';
 
-  constructor( public connection: ConnectionService) { }
+  constructor(
+    public connection: ConnectionService,
+    public catalog: CatalogService
+  ) {}
 
 
   ngOnInit(): void {
@@ -58,5 +62,18 @@ export class AdminSettingsComponent implements OnInit {
         this.alertMessage = error;
       }
     });
+  }
+
+  onSynchronizaCatalog() {
+    if (this.connection.current.jwtToken) {
+      this.catalog.synchronizeCatalog().subscribe({
+        next: (success) => {
+          console.log(success);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    }
   }
 }
