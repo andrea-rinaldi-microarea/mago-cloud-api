@@ -40,8 +40,8 @@ public class ConnectionController : ControllerBase
             if (!result.Success || result.UserData == null || !result.UserData.IsLogged)
             {
                 return new ContentResult {
-                    StatusCode = result.StatusCode,
-                    Content = $"Error on login: {result.ReturnValue}"
+                    StatusCode = 401,
+                    Content = $"Error on login: {result.Message} (code: {result.StatusCode})"
                 };
             }
 

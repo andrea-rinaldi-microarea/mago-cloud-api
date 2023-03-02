@@ -29,7 +29,7 @@
         },
         {
             "name": "magic-link-node-jquery",
-            "program": "${workspaceFolder}/magic-link-node-jquery/server.js",
+            "program": "${workspaceFolder}/magic-link-jquery-node/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
